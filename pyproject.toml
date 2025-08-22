@@ -62,6 +62,7 @@ test = [
     "voraus-ipc-tools-ansible[test-template]",
     # Add additional testing dependencies here
     "molecule==25.7.0",
+    "molecule-plugins[vagrant]==25.8.12",
     "pytest-testinfra==10.2.2",
 ]
 doc = [
