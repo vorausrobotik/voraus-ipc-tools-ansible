@@ -1,0 +1,212 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
+build-backend = "setuptools.build_meta"
+
+# Enables the usage of setuptools_scm
+[tool.setuptools_scm]
+
+
+[project]
+name = "voraus-ipc-tools-ansible"
+authors = [
+    { name = "Jan-Frederik Schmidt", email = "jan-frederik.schmidt@vorausrobotik.com" },
+]
+description = "voraus IPC related Ansible roles and tools."
+license = { file = "LICENSE.txt" }
+readme = { file = "README.rst", content-type = "text/x-rst" }
+urls.Repository = "https://github.com/vorausrobotik/voraus-ipc-tools-ansible"
+requires-python = ">=3.11"
+dynamic = ["version"] # Uses setuptools_scm to determine the version
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    # Begin template-managed dependencies
+    "importlib-metadata",
+    # End template-managed dependencies
+    # Add additional runtime dependencies below this line
+    "ansible==11.9.0",
+    "ansible-compat==25.8.1",
+    "ansible-dev-tools==25.2.1",
+]
+
+[tool.setuptools.packages]
+find = {}
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[project.optional-dependencies]
+dev = [
+    "voraus-ipc-tools-ansible[tox]",
+    "voraus-ipc-tools-ansible[lint]",
+    "voraus-ipc-tools-ansible[test]",
+    "voraus-ipc-tools-ansible[doc]",
+    "voraus-ipc-tools-ansible[build]",
+]
+lint = [
+    "voraus-ipc-tools-ansible[lint-template]",
+    # Add additional linting dependencies here
+]
+test = [
+    "voraus-ipc-tools-ansible[test-template]",
+    # Add additional testing dependencies here
+    "molecule==25.7.0",
+    "pytest-testinfra==10.2.2",
+]
+doc = [
+    "voraus-ipc-tools-ansible[doc-template]",
+    # Add additional documentation dependencies below this line
+]
+build = [
+    "voraus-ipc-tools-ansible[build-template]",
+    # Add additional build dependencies below this line
+    "setuptools_scm",
+]
+
+###########################################################
+# The following dependencies are managed via the template.#
+# Do not modify them manually to prevent conflicts during #
+# template updates.                                       #
+###########################################################
+
+tox = ["tox==4.28.4", "tox-uv~=1.28"]
+lint-template = [
+    "isort==6.0.0",
+    "black==25.1.0",
+    "mypy==1.15.0",
+    "pylint==3.3.4",
+    "pytest==8.3.4",
+    "doc8==1.1.2",
+    "types-docutils",
+    "types-setuptools",
+    "jinja2==3.1.5",
+    "ruff==0.9.5",
+]
+test-template = [
+    "pytest==8.3.4",
+    "pytest-randomly==3.16.0",
+    "pytest-cov==6.0.0",
+    "coverage[toml]==7.6.11",
+]
+doc-template = [
+    "sphinx==8.1.3",
+    "sphinxawesome-theme==5.3.2",
+    "sphinx-selective-exclude==1.0.3",
+    "sphinx-autodoc-typehints==3.0.1",
+    "pip-licenses==5.0.0",
+    "jinja2==3.1.5",
+    "snowballstemmer==2.2.0",
+]
+
+build-template = ["build[virtualenv]==1.2.2.post1"]
+
+########################################
+# End of template-managed dependencies #
+########################################
+
+[tool.pyright]
+exclude = ["build/**"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+extend_skip_glob = ["venv*/*", "log/*"]
+
+[tool.black]
+line_length = 120
+extend-exclude = "venv.*"
+
+[tool.ruff]
+line-length = 120
+src = ["."]
+lint.select = ["C901", "D"]
+extend-exclude = ["log"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "D103", # Missing docstring in public function
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pylint.master]
+recursive = "yes"
+# The following settings modify the behavior when running pylint with pylint.extensions.docparams plugin loaded
+accept-no-param-doc = "no"
+accept-no-raise-doc = "no"
+accept-no-return-doc = "no"
+accept-no-yields-doc = "no"
+ignore = [
+    "conf.py", # The Sphinx config file
+    "build",
+    "dist",
+    "log",
+]
+ignore-patterns = [
+    "venv.*",
+    "^\\..+", # Ignore hidden folders or files
+]
+
+[tool.pylint.messages_control]
+max-line-length = 120
+# https://github.com/samuelcolvin/pydantic/issues/1961
+extension-pkg-whitelist = "pydantic"
+# ignore unrecognized-option because of https://github.com/PyCQA/pylint/issues/6799
+disable = """
+    unrecognized-option,
+    too-few-public-methods,
+    logging-fstring-interpolation,
+    too-many-instance-attributes,
+    too-many-arguments,
+    missing-function-docstring
+    """
+
+[tool.pylint.similarities]
+# Exclude the following from code duplication checks
+ignore-comments = "yes"
+ignore-docstrings = "yes"
+ignore-imports = "yes"
+ignore-signatures = "yes"
+
+[tool.mypy]
+# Functions need to be annotated
+disallow_untyped_defs = true
+warn_unused_ignores = true
+exclude = [
+    "voraus-ipc-tools-ansible-\\d+", # Ignore temporary folder created by setuptools when building an sdist
+    "venv.*/",
+    "log/",
+    "build/",
+    "dist/",
+]
+
+[tool.pytest.ini_options]
+addopts = """
+    -vv
+    --doctest-modules
+    --import-mode=append
+    --ignore-glob=voraus-ipc-tools-ansible-[0-9]*
+    --ignore="docs/_scripts"
+    """
+
+
+[[tool.mypy.overrides]]
+module = [
+    # Ignore packages that do not provide type hints here
+    # For example, add "dash.*" to ignore all imports from Dash
+    "sphinxawesome_theme.postprocess",
+]
+ignore_missing_imports = true
+
+[tool.doc8]
+max-line-length = 120
