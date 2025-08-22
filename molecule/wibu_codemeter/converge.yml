@@ -1,0 +1,8 @@
+---
+- name: Execute role
+  hosts: all
+  become: true
+  tasks:
+    - name: Testing role
+      ansible.builtin.include_role:
+        name: wibu_codemeter

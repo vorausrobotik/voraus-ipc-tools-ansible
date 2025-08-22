@@ -1,0 +1,52 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name: libusb-1.0-0
+    state: present
+
+- name: Add wibu package maintainers GPG key to trusted keys
+  ansible.builtin.get_url:
+    url: https://wibu-packages.vorausrobotik.com/ubuntu/wibu-packages-maintainers.gpg
+    dest: /usr/share/keyrings/wibu-package-maintainers.asc
+    mode: '0644'
+
+- name: Add wibu packages apt repo
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.asc] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
+    filename: wibu_packages
+    state: present
+
+- name: Install codemeter in the requested version
+  ansible.builtin.apt:
+    name: '{{ wibu_codemeter_package_name }}={{ wibu_codemeter_package_version }}'
+    state: present
+  notify:
+    - Stop CodeMeter Systemd Service
+
+- name: Force all notified handlers to run at this point (Stop systemd service now)
+  ansible.builtin.meta: flush_handlers
+
+- name: Configure License Server
+  community.general.ini_file:
+    path: '{{ wibu_codemeter_config_path }}'
+    create: false
+    section: '{{ item.section }}'
+    option: '{{ item.option }}'
+    value: '{{ item.value }}'
+    ignore_spaces: true
+    owner: daemon
+    group: daemon
+    mode: '0644'
+  with_items:
+    - section: General
+      option: IsNetworkServer
+      value: "{{ '1' if wibu_codemeter_is_network_server else '0' }}"
+    - section: General
+      option: BindAddress
+      value: '{{ wibu_codemeter_bind_address }}'
+  notify:
+    - Enable and Start CodeMeter Systemd Service

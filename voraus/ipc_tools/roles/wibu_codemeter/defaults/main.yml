@@ -1,0 +1,7 @@
+---
+wibu_codemeter_package_name: codemeter-lite
+wibu_codemeter_package_version: 8.20.6539.500
+wibu_codemeter_service_name: codemeter.service
+wibu_codemeter_config_path: /etc/wibu/CodeMeter/Server.ini
+wibu_codemeter_is_network_server: true
+wibu_codemeter_bind_address: '0.0.0.0'
