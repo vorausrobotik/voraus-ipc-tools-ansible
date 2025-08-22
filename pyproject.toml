@@ -55,6 +55,7 @@ dev = [
 lint = [
     "voraus-ipc-tools-ansible[lint-template]",
     # Add additional linting dependencies here
+    "pytest-testinfra",
 ]
 test = [
     "voraus-ipc-tools-ansible[test-template]",
@@ -205,6 +206,7 @@ module = [
     # Ignore packages that do not provide type hints here
     # For example, add "dash.*" to ignore all imports from Dash
     "sphinxawesome_theme.postprocess",
+    "testinfra.*",
 ]
 ignore_missing_imports = true
 
