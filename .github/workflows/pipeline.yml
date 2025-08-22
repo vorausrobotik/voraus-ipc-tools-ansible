@@ -54,3 +54,22 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  create-github-release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    needs:
+      - publish-docs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run JReleaser
+        uses: jreleaser/release-action@v2
+        with:
+          version: latest
+        env:
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_PROJECT_VERSION: ${{ github.ref_name }}
