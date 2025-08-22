@@ -55,6 +55,7 @@ dev = [
 lint = [
     "voraus-ipc-tools-ansible[lint-template]",
     # Add additional linting dependencies here
+    "pylint-per-file-ignores==1.4.0",
     "pytest-testinfra",
 ]
 test = [
@@ -133,7 +134,8 @@ lint.select = ["C901", "D"]
 extend-exclude = ["log"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = [
+"molecule/**" = [
+    "D100", # Missing docstring in public module
     "D103", # Missing docstring in public function
 ]
 
@@ -157,6 +159,7 @@ ignore-patterns = [
     "venv.*",
     "^\\..+", # Ignore hidden folders or files
 ]
+load-plugins = ["pylint_per_file_ignores"]
 
 [tool.pylint.messages_control]
 max-line-length = 120
@@ -171,6 +174,9 @@ disable = """
     too-many-arguments,
     missing-function-docstring
     """
+per-file-ignores = [
+    "test_.*\\.py:missing-function-docstring,missing-module-docstring",
+]
 
 [tool.pylint.similarities]
 # Exclude the following from code duplication checks
