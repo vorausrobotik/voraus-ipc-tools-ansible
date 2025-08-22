@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: wibu_codemeter
+  namespace: voraus
+  author: Jan-Frederik Schmidt
+  description: Installs a WiBu CodeMeter license server on the host.
+  company: voraus robotik GmbH
+
+  license: MIT
+
+  min_ansible_version: '2.1'
+
+  galaxy_tags: []
+
+dependencies: []

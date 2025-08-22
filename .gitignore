@@ -14,6 +14,7 @@ reports/
 .coverage.*
 .mypy_cache
 .ruff_cache
+**/.pytest_cache
 .ansible
 MANIFEST
 docs/voraus_ipc_tools_ansible*

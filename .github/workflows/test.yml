@@ -1,22 +1,70 @@
-name: Test
+name: Tests
 
 on: [workflow_call]
 
 jobs:
-  test:
+  discover-roles:
+    name: Discover Roles with Molecule Tests
     runs-on: ubuntu-latest
-
+    outputs:
+      roles: ${{ steps.discover.outputs.roles }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Find roles with Molecule tests
+        id: discover
+        run: |
+          roles=$(ls molecule | jq -R -s -c 'split("\n")[:-1]')
+          echo "roles=$roles" >> $GITHUB_OUTPUT
+        shell: bash
+
+  run-tests:
+    name: Run Molecule Tests
+    needs: discover-roles
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        role: ${{ fromJson(needs.discover-roles.outputs.roles) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          fetch-tags: true
 
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: 3.13
 
-      - name: Install tox
-        run: python -m pip install --upgrade tox==4.23.2 tox-uv~=1.16.0
+      - name: Create venv and install python dependencies
+        run: |
+          sudo python3 -m venv /tmp/venv/
+          sudo /tmp/venv/bin/pip install ".[dev]"
 
-      - name: Run tests
-        run: tox -e test
+      - name: Write version to galaxy.yml
+        run: sudo bash -c "source /tmp/venv/bin/activate && make version"
+
+      - name: Install ansible dependencies
+        run: |
+          sudo /tmp/venv/bin/ansible-galaxy collection install -r requirements.yml
+          sudo /tmp/venv/bin/ansible-galaxy role install -r requirements.yml
+
+      - name: Install dependencies
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt update && sudo apt install -y vagrant
+          sudo apt-get update
+          sudo apt-get install -y \
+            libvirt-dev \
+            libvirt-clients \
+            vagrant \
+            qemu-system \
+            qemu-kvm \
+            libvirt-daemon-system
+          sudo vagrant plugin install vagrant-libvirt
+
+      - name: Run Molecule tests for ${{ matrix.role }}
+        run: sudo bash -c "source /tmp/venv/bin/activate && molecule test -s ${{ matrix.role }}"

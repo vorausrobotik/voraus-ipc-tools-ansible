@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+platforms:
+  - name: wibu-codemeter-test
+    box: debian/bookworm64
+    memory: 1024
+    cpus: 1
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: ../../voraus/ipc_tools/roles/
+verifier:
+  name: testinfra
+  options:
+    # https://github.com/pytest-dev/pytest-testinfra/issues/58#issuecomment-1839460327
+    # pytest-ansible conflicts with --connection
+    p: 'no:pytest-ansible'
+
+    # avoid loading global pyproject.toml options, so we don't
+    # load the setting that says "disable testinfra"
+    c: '.'
