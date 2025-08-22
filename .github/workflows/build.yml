@@ -1,0 +1,41 @@
+name: Build
+
+on: [workflow_call]
+
+jobs:
+  build-collection:
+    name: Build Collection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install --upgrade pip tox && pip install ".[dev]"
+
+      - name: Build
+        run: tox -e build
+
+      - name: Require non dirty git workspace
+        run: |
+          CHANGES=$(git status --porcelain)
+          if [[ -n "$CHANGES" ]]; then
+            echo "❌ Workspace is dirty. The following files have been modified:"
+            echo "$CHANGES"
+            exit 1
+          else
+            echo "✅ Workspace is clean."
+          fi
+
+      - name: Upload collection
+        uses: actions/upload-artifact@v4
+        with:
+          name: collection
+          path: '*.tar.gz'
