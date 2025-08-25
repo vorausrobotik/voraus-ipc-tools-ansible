@@ -38,8 +38,8 @@ dependencies = [
     "ansible-dev-tools==25.2.1",
 ]
 
-[tool.setuptools.packages]
-find = {}
+[tool.setuptools.packages.find]
+where = ["voraus"]
 
 [tool.setuptools.package-data]
 "*" = ["py.typed"]

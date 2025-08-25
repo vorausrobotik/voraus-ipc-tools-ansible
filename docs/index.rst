@@ -1,14 +1,6 @@
 .. include:: ../README.rst
 
-########
-Contents
-########
-
-.. toctree::
-   :maxdepth: 2
-
-   get_started
-
+.. include:: get_started.rst
 
 ##############################
 License Compliance Information
