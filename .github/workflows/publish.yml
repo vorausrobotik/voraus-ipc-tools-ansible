@@ -39,3 +39,22 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  publish-collection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: collection
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install ansible
+        run: pip install ansible
+
+      - name: Deploy collection to Ansible
+        id: deployment
+        run: ansible-galaxy collection publish *.tar.gz --token ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
