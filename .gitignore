@@ -35,6 +35,7 @@ dist/
 *.py[cod]
 *.jar
 voraus-ipc-tools-ansible-[0-9]*
+voraus-ipc_tools-*/
 *.tar.gz
 
 # Log files

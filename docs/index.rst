@@ -1,4 +1,6 @@
-.. include:: ../README.rst
+.. include:: ../README.md
+   :parser: myst_parser.docutils_
+
 
 .. include:: get_started.rst
 
