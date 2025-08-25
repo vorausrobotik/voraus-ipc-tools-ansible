@@ -10,7 +10,7 @@ name: ipc_tools
 # The version of the collection. Must be compatible with semantic versioning (Replaced with `tox run -r build`)
 version: __VERSION__
 
-readme: README.rst
+readme: README.md
 
 authors:
   - Jan-Frederik Schmidt <jan-frederik.schmidt@vorausrobotik.com>

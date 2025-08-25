@@ -5,6 +5,8 @@ galaxy_info:
   description: Installs a WiBu CodeMeter license server on the host.
   company: voraus robotik GmbH
 
+  readme: README.md
+
   license: MIT
 
   min_ansible_version: '2.1'
