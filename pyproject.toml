@@ -107,7 +107,7 @@ doc-template = [
     "sphinx-autodoc-typehints==3.2.0",
     "pip-licenses==5.0.0",
     "jinja2==3.1.6",
-    "snowballstemmer==2.2.0",
+    "snowballstemmer==3.0.1",
 ]
 
 build-template = ["build[virtualenv]==1.3.0"]
