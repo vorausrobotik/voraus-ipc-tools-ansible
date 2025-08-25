@@ -68,6 +68,7 @@ test = [
 doc = [
     "voraus-ipc-tools-ansible[doc-template]",
     # Add additional documentation dependencies below this line
+    "myst-parser==4.0.1",
 ]
 build = [
     "voraus-ipc-tools-ansible[build-template]",
