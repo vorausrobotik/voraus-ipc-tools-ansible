@@ -15,7 +15,7 @@ jobs:
       - name: Find roles with Molecule tests
         id: discover
         run: |
-          roles=$(ls molecule | jq -R -s -c 'split("\n")[:-1]')
+          roles=$(ls molecule | grep -v shared | jq -R -s -c 'split("\n")[:-1]')
           echo "roles=$roles" >> $GITHUB_OUTPUT
         shell: bash
 

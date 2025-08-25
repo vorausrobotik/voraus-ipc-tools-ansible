@@ -1,0 +1,57 @@
+- name: Check if /boot is present in df -h output
+  ansible.builtin.shell: df -h | grep -q ' /boot$' # Returns 0 if /boot is mounted separately, 1 otherwise.
+  register: realtime_kernel_grep_boot
+  ignore_errors: true
+  changed_when: false
+
+- name: Remount /boot partition in read-write mode (if separate)
+  ansible.posix.mount:
+    path: /boot
+    src: '{{ boot_device.stdout }}'
+    state: ephemeral
+    fstype: auto
+    opts: rw
+  changed_when: false # Required for molecule idempotence check
+  when: realtime_kernel_grep_boot.rc == 0
+
+- name: Remove non-rt kernel and header packages
+  block:
+    - name: List all installed linux-image and linux-headers packages
+      ansible.builtin.shell: |
+        set -euo pipefail
+        apt list --installed 'linux-image-*' 'linux-headers-*' 2>/dev/null \
+          | grep -v 'rt' \
+          | awk -F/ '/installed/ {print $1}' \
+          | tr '\n' ' '
+      args:
+        executable: /bin/bash
+      register: realtime_kernel_non_rt_kernels
+      changed_when: false # Required for molecule idempotence check
+      check_mode: false
+
+    - name: Remove non-rt kernel and header packages
+      ansible.builtin.apt:
+        name: '{{ realtime_kernel_non_rt_kernels.stdout.split() }}'
+        state: absent
+        autoremove: true
+        purge: true
+      when: realtime_kernel_non_rt_kernels.stdout != ""
+
+- name: Install realtime kernel
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+      - linux-image-rt-amd64
+      - linux-headers-rt-amd64
+
+- name: Update GRUB
+  ansible.builtin.command: update-grub2
+  changed_when: false # Required for molecule idempotence check
+
+- name: Remount /boot partition in read-only mode
+  changed_when: false # Required for molecule idempotence check
+  when: realtime_kernel_grep_boot.rc == 0
+  ansible.posix.mount:
+    path: /boot
+    state: ephemeral
+    opts: ro
