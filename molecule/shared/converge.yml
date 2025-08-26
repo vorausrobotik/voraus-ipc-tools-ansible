@@ -5,4 +5,4 @@
   tasks:
     - name: Testing role
       ansible.builtin.include_role:
-        name: wibu_codemeter
+        name: '{{ role_name }}'

@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: realtime_kernel
+  namespace: voraus
+  author: Jan-Frederik Schmidt
+  description: Installs a realtime kernel on the host.
+  company: voraus robotik GmbH
+
+  license: MIT
+
+  min_ansible_version: '2.1'
+
+  galaxy_tags: []
+
+dependencies: []

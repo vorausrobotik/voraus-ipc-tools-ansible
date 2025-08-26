@@ -6,7 +6,7 @@ driver:
   provider:
     name: libvirt
 platforms:
-  - name: wibu-codemeter-test
+  - name: realtime-kernel-test
     box: debian/bookworm64
     memory: 1024
     cpus: 1
@@ -18,7 +18,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        role_name: wibu_codemeter
+        role_name: realtime_kernel
   env:
     ANSIBLE_ROLES_PATH: ../../voraus/ipc_tools/roles/
   playbooks:
@@ -34,3 +34,5 @@ verifier:
     # avoid loading global pyproject.toml options, so we don't
     # load the setting that says "disable testinfra"
     c: '.'
+
+    sudo: true # /boot/grub/grub.cfg is only readable by root
