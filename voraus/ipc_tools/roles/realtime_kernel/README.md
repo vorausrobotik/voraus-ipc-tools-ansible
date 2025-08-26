@@ -4,7 +4,7 @@ Installs a realtime kernel on the host.
 
 ## Requirements
 
-None.
+Currently we only support 64-bit systems.
 
 ## Role Variables
 
