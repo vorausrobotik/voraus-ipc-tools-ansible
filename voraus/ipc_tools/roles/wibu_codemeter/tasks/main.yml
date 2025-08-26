@@ -1,11 +1,10 @@
 ---
-- name: Update apt cache
-  ansible.builtin.apt:
-    update_cache: true
-
 - name: Install dependencies
   ansible.builtin.apt:
-    name: libusb-1.0-0
+    update_cache: true
+    pkg:
+      - libusb-1.0-0
+      - gnupg2
     state: present
 
 - name: Add wibu package maintainers GPG key to trusted keys
@@ -22,6 +21,7 @@
 
 - name: Install codemeter in the requested version
   ansible.builtin.apt:
+    update_cache: true
     name: '{{ wibu_codemeter_package_name }}={{ wibu_codemeter_package_version }}'
     state: present
   notify:
