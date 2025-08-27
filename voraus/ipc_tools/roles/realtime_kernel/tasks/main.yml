@@ -7,8 +7,7 @@
 - name: Remount /boot partition in read-write mode (if separate)
   ansible.posix.mount:
     path: /boot
-    src: '{{ boot_device.stdout }}'
-    state: ephemeral
+    state: remounted
     fstype: auto
     opts: rw
   changed_when: false # Required for molecule idempotence check
@@ -53,5 +52,4 @@
   when: realtime_kernel_grep_boot.rc == 0
   ansible.posix.mount:
     path: /boot
-    state: ephemeral
-    opts: ro
+    state: remounted
