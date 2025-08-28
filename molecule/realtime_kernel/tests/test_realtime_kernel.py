@@ -11,3 +11,11 @@ def test_only_realtime_kernel_is_installed(host: Host) -> None:
     assert len(menu_entries) > 0, "No menu entries found in grub configuration."
     for match in menu_entries:
         assert "rt-amd64" in match.group("kernel")
+
+
+def test_realtime_kernel_is_loaded(host: Host) -> None:
+    kernel_cmd = host.run("uname -r")
+    assert kernel_cmd.rc == 0
+    assert kernel_cmd.stdout.strip().endswith(
+        "rt-amd64"
+    ), f"Loaded kernel is not a realtime kernel: {kernel_cmd.stdout}"

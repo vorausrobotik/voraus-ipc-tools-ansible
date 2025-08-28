@@ -1,0 +1,4 @@
+---
+realtime_kernel_apt_packages:
+  - linux-image-rt-amd64
+  - linux-headers-rt-amd64

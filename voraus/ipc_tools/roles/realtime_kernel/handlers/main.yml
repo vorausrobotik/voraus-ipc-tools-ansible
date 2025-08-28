@@ -1,0 +1,6 @@
+---
+- name: Update GRUB # noqa no-changed-when
+  ansible.builtin.command: update-grub2
+
+- name: Reboot Machine
+  ansible.builtin.reboot:
