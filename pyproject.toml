@@ -178,7 +178,7 @@ disable = """
     missing-function-docstring
     """
 per-file-ignores = [
-    "test_.*\\.py:missing-function-docstring,missing-module-docstring",
+    "test_.*\\.py:missing-function-docstring,missing-module-docstring,duplicate-code",
 ]
 
 [tool.pylint.similarities]
@@ -192,6 +192,7 @@ ignore-signatures = "yes"
 # Functions need to be annotated
 disallow_untyped_defs = true
 warn_unused_ignores = true
+explicit_package_bases = true
 exclude = [
     "voraus-ipc-tools-ansible-\\d+", # Ignore temporary folder created by setuptools when building an sdist
     "venv.*/",
@@ -218,6 +219,7 @@ module = [
     "testinfra.*",
 ]
 ignore_missing_imports = true
+
 
 [tool.doc8]
 max-line-length = 120
