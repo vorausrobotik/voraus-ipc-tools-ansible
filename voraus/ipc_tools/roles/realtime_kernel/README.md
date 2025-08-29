@@ -16,10 +16,10 @@ None.
 
 ## Example Playbook
 
-.. code-block:: yaml
-
+```yaml
 - hosts: servers
   collections:
-  - voraus.ipc_tools
-    roles:
-  - voraus.ipc_tools.realtime_kernel
+    - voraus.ipc_tools
+  roles:
+    - voraus.ipc_tools.realtime_kernel
+```
