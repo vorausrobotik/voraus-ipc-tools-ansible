@@ -55,7 +55,7 @@ dev = [
 lint = [
     "voraus-ipc-tools-ansible[lint-template]",
     # Add additional linting dependencies here
-    "pylint-per-file-ignores==1.4.0",
+    "pylint-per-file-ignores==2.0.3",
     "pytest-testinfra",
     "myst-parser==4.0.1",
 ]
