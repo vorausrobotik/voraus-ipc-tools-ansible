@@ -62,7 +62,7 @@ lint = [
 test = [
     "voraus-ipc-tools-ansible[test-template]",
     # Add additional testing dependencies here
-    "molecule==25.1.0",                   # https://github.com/ansible-community/molecule-plugins/issues/301
+    "molecule==25.9.0",                   # https://github.com/ansible-community/molecule-plugins/issues/301
     "molecule-plugins[vagrant]==25.8.12",
     "pytest-testinfra==10.2.2",
 ]
