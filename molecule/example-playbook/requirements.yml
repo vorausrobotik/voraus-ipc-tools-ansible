@@ -1,4 +1,7 @@
 ---
+roles:
+  - name: geerlingguy.docker
+
 collections:
   - name: voraus.ipc_tools
     source: voraus/ipc_tools

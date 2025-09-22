@@ -6,6 +6,9 @@
 # Ansible Galaxy file. This is generated with the `make, make version resp tox run -r build command`
 galaxy.yml
 
+# Exclude local development inventory file
+inventory.yml
+
 # General
 output/
 .tox/

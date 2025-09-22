@@ -6,6 +6,7 @@
   roles:
     - voraus.ipc_tools.realtime_kernel
     - voraus.ipc_tools.wibu_codemeter
+    - geerlingguy.docker
   tasks:
     - name: Install base packages
       ansible.builtin.package:

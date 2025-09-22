@@ -16,6 +16,9 @@ from testinfra.host import Host
         "gnupg2",
         "nmap",
         "tcpdump",
+        "docker-ce",
+        "docker-ce-cli",
+        "docker-compose-plugin",
     ],
 )
 def test_apt_packages(package: str, host: Host) -> None:
