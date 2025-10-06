@@ -27,6 +27,9 @@ python3 -m venv venv
 source venv/bin/activate
 pip install ansible
 
+# Install the docker role
+ansible-galaxy role install geerlingguy.docker
+
 # Install the collection
 ansible-galaxy collection install voraus.ipc_tools
 ```
