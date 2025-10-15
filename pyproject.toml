@@ -88,7 +88,7 @@ lint-template = [
     "isort==6.0.1",
     "black==25.9.0",
     "mypy==1.18.1",
-    "pylint==3.3.8",
+    "pylint==4.0.1",
     "pytest==8.4.2",
     "doc8==2.0.0",
     "types-docutils",
