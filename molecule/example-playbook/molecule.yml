@@ -19,6 +19,9 @@ provisioner:
   name: ansible
   playbooks:
     converge: ../../voraus/ipc_tools/playbooks/example.yml
+  config_options:
+    defaults:
+      roles_path: '$MOLECULE_PROJECT_DIRECTORY/..'
 verifier:
   name: testinfra
   options:
