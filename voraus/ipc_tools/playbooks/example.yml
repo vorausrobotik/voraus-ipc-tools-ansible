@@ -1,8 +1,7 @@
 ---
-- hosts: all
+- name: Example Playbook for voraus IPC Tools
+  hosts: all
   become: true
-  collections:
-    - voraus.ipc_tools
   roles:
     - voraus.ipc_tools.realtime_kernel
     - voraus.ipc_tools.wibu_codemeter
