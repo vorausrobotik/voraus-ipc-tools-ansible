@@ -3,6 +3,7 @@ profile: production
 skip_list:
   - '403' # Package installs should not use latest.
   - 'galaxy[no-changelog]'
-project_dir: .
 offline: false
 strict: true
+exclude_paths:
+  - jreleaser.yml
