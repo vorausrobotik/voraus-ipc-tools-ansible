@@ -17,9 +17,9 @@
     realtime_kernel_apt_packages | reject('in', ansible_facts.packages.keys()) | list | length > 0
     or
     realtime_kernel_non_rt_kernels | length > 0
-
+    or
+    '-rt-' not in ansible_kernel
   notify:
-    - Update GRUB
     - Reboot Machine
   block:
     - name: Check if /boot is mounted in read-only mode
@@ -50,3 +50,10 @@
         update_cache: true
         pkg: '{{ realtime_kernel_apt_packages }}'
       register: realtime_kernel_apt_install
+
+    - name: Update GRUB # noqa no-changed-when
+      when: >-
+        '-rt-' not in ansible_kernel
+        or
+        realtime_kernel_apt_install.changed
+      ansible.builtin.command: update-grub2
