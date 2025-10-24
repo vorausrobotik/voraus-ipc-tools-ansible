@@ -24,6 +24,9 @@ provisioner:
   playbooks:
     prepare: ../shared/prepare.yml
     converge: ../shared/converge.yml
+  config_options:
+    defaults:
+      roles_path: '$MOLECULE_PROJECT_DIRECTORY/..'
 verifier:
   name: testinfra
   options:
