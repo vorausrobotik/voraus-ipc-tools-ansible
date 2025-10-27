@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import re
 
 from testinfra.host import Host
