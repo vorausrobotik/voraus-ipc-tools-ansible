@@ -86,7 +86,7 @@ build = [
 tox = ["tox==4.32.0", "tox-uv~=1.28"]
 lint-template = [
     "isort==7.0.0",
-    "black==25.9.0",
+    "black==25.11.0",
     "mypy==1.18.2",
     "pylint==4.0.2",
     "pytest==8.4.2",
