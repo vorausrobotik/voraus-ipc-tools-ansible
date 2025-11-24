@@ -94,7 +94,7 @@ lint-template = [
     "types-docutils",
     "types-setuptools",
     "jinja2==3.1.6",
-    "ruff==0.14.4",
+    "ruff==0.14.6",
 ]
 test-template = [
     "pytest==9.0.0",
