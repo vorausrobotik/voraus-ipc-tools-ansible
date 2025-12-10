@@ -19,3 +19,9 @@ def test_realtime_kernel_is_loaded(host: Host) -> None:
     assert kernel_cmd.stdout.strip().endswith(
         "rt-amd64"
     ), f"Loaded kernel is not a realtime kernel: {kernel_cmd.stdout}"
+
+
+def test_nomodeset_is_enabled(host: Host) -> None:
+    cmdline = host.run("cat /proc/cmdline")
+    assert cmdline.rc == 0
+    assert "nomodeset" in cmdline.stdout, "nomodeset is not enabled in grub configuration."
