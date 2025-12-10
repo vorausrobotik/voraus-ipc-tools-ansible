@@ -1,0 +1,46 @@
+---
+# Ensures that the required kernel parameters for realtime operation are set. Works with GRUB only.
+#
+# The required kernel parameters are:
+#   - nomodeset
+#
+# There are 3 cases to consider:
+# 1) GRUB_CMDLINE_LINUX_DEFAULT exists
+#   a) nomodeset is already present -> Do nothing
+#   b) nomodeset is not present -> Add nomodeset to the line
+# 2) GRUB_CMDLINE_LINUX_DEFAULT does not exist
+#    -> Add a new line with GRUB_CMDLINE_LINUX_DEFAULT="nomodeset"
+# 3) GRUB_CMDLINE_LINUX_DEFAULT but is commented out
+#    -> Treat as case 2
+
+- name: Search GRUB_CMDLINE_LINUX_DEFAULT grub config entry
+  ansible.builtin.shell: "grep '^GRUB_CMDLINE_LINUX_DEFAULT=.*' /etc/default/grub"
+  register: realtime_kernel_grub_cfg_grep_default
+  changed_when: false
+  failed_when: realtime_kernel_grub_cfg_grep_default.rc > 1
+
+# Case 1
+- name: Ensure nomodeset is present in GRUB_CMDLINE_LINUX_DEFAULT
+  when: realtime_kernel_grub_cfg_grep_default.rc == 0
+  block:
+    - name: Checking for nomodeset kernel parameter in GRUB config
+      ansible.builtin.shell: "grep 'GRUB_CMDLINE_LINUX_DEFAULT=.*nomodeset.*' /etc/default/grub"
+      register: realtime_kernel_grub_cfg_grep_nomodeset
+      changed_when: false
+      failed_when: realtime_kernel_grub_cfg_grep_nomodeset.rc > 1
+
+    # Case 1b (1a doesn't need any action)
+    - name: Adding nomodeset kernel parameter to GRUB config
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((\w.?)*)"$'
+        replace: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 nomodeset"'
+      when: realtime_kernel_grub_cfg_grep_nomodeset.rc == 1
+      register: realtime_kernel_update_grub_cfg
+
+# Case 2 and 3
+- name: Add GRUB_CMDLINE_LINUX_DEFAULT with nomodeset if not present
+  when: realtime_kernel_grub_cfg_grep_default.rc == 1
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="nomodeset"'

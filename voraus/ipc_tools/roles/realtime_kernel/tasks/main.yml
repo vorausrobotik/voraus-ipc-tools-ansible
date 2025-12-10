@@ -12,6 +12,10 @@
         | map(attribute='key') | list
       }}
 
+- name: Update kernel parameters if necessary
+  ansible.builtin.include_tasks: update_kernel_params.yml
+  register: realtime_kernel_kernel_params_update
+
 - name: Run install/uninstall tasks
   when: >-
     realtime_kernel_apt_packages | reject('in', ansible_facts.packages.keys()) | list | length > 0
@@ -19,6 +23,8 @@
     realtime_kernel_non_rt_kernels | length > 0
     or
     '-rt-' not in ansible_kernel
+    or
+    realtime_kernel_kernel_params_update.changed
   notify:
     - Reboot Machine
   block:
@@ -56,4 +62,6 @@
         '-rt-' not in ansible_kernel
         or
         realtime_kernel_apt_install.changed
+        or
+        realtime_kernel_kernel_params_update.changed
       ansible.builtin.command: update-grub2
