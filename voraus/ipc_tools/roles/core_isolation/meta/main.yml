@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: core_isolation
+  namespace: voraus
+  author: Michael Barulin
+  description: Isolates one or more CPUs so that no system/user processes are scheduled on them.
+  company: voraus robotik GmbH
+
+  license: MIT
+
+  min_ansible_version: '2.1'
+
+  galaxy_tags: []
+
+dependencies: []
