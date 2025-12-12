@@ -1,0 +1,4 @@
+---
+# The CPU core IDs to isolate. These are blocked for general system and user processes
+core_isolation_isolated_core_ids:
+  - 1

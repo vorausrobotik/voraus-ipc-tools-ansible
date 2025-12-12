@@ -4,6 +4,7 @@
   become: true
   roles:
     - voraus.ipc_tools.realtime_kernel
+    - voraus.ipc_tools.core_isolation
     - voraus.ipc_tools.wibu_codemeter
     - geerlingguy.docker
   tasks:
