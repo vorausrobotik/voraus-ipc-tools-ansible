@@ -30,9 +30,14 @@
   block:
     - name: Check if /boot is mounted in read-only mode
       # Returns 0 if /boot is mounted separately and in read-only mode, 1 otherwise.
-      ansible.builtin.shell: grep "[[:space:]]ro[[:space:],]" /proc/mounts | grep /boot
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          grep "[[:space:]]ro[[:space:],]" /proc/mounts | grep /boot
+        executable: /bin/bash
+
       register: realtime_kernel_grep_boot
-      ignore_errors: true
+      failed_when: realtime_kernel_grep_boot.rc > 1
       changed_when: false
 
     - name: Remount /boot partition in read-write mode if necessary
