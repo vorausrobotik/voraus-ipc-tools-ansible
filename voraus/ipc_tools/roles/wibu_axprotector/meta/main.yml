@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: wibu_axprotector
+  namespace: voraus
+  author: Jan-Frederik Schmidt
+  description: >
+    Installs WIBU's [AxProtector](https://www.wibu.com/products/protection-suite/axprotector.html) on the host.
+  company: voraus robotik GmbH
+  license: MIT
+
+  min_ansible_version: '2.1'
+
+  galaxy_tags: []
+
+dependencies: []
