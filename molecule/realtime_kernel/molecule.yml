@@ -13,6 +13,13 @@ platforms:
     networks:
       - name: 'public_network'
         type: 'dhcp'
+  - name: realtime-kernel-test-existing-nomodeset
+    box: debian/bookworm64
+    memory: 1024
+    cpus: 1
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
 provisioner:
   name: ansible
   inventory:
@@ -22,7 +29,7 @@ provisioner:
   env:
     ANSIBLE_ROLES_PATH: ../../voraus/ipc_tools/roles/
   playbooks:
-    prepare: ../shared/prepare.yml
+    prepare: prepare.yml
     converge: ../shared/converge.yml
 verifier:
   name: testinfra

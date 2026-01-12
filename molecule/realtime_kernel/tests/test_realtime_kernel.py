@@ -25,3 +25,4 @@ def test_nomodeset_is_enabled(host: Host) -> None:
     cmdline = host.run("cat /proc/cmdline")
     assert cmdline.rc == 0
     assert "nomodeset" in cmdline.stdout, "nomodeset is not enabled in grub configuration."
+    assert cmdline.stdout.count("nomodeset") == 1, "Duplicate nomodeset in grub configuration"

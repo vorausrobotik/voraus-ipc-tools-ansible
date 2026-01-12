@@ -1,0 +1,21 @@
+---
+- name: Import shared prepare playbook
+  ansible.builtin.import_playbook: ../shared/prepare.yml
+
+- name: Add nomodeset parameter to grub config
+  hosts: realtime-kernel-test-existing-nomodeset
+  become: true
+
+  tasks:
+    - name: Adding nomodeset kernel parameter to GRUB config
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((\w.?)*)"$'
+        replace: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 nomodeset"'
+      register: realtime_kernel_update_grub_cfg
+
+    - name: Update GRUB # noqa no-changed-when
+      ansible.builtin.command: update-grub2
+
+    - name: Reboot Machine
+      ansible.builtin.reboot:
