@@ -1,0 +1,73 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+platforms:
+  - name: grub-config-default
+    box: debian/bookworm64
+    memory: 512
+    cpus: 1
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
+  - name: grub-config-existing-nomodeset-override-key-value
+    box: debian/bookworm64
+    memory: 512
+    cpus: 1
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
+  - name: grub-config-duplicate-nomodeset
+    box: debian/bookworm64
+    memory: 512
+    cpus: 1
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        role_name: grub_config
+    host_vars:
+      # No initial values, no values to add. Should not change anything
+      grub-config-default:
+        grub_config_initial_test_values: ''
+        expected_cmdline_params: {}
+      # Should override existing key=value parameter
+      grub-config-existing-nomodeset-override-key-value:
+        grub_config_initial_test_values: 'nomodeset foo=bar'
+        grub_config_entries_to_set:
+          nomodeset:
+          foo: baz
+        expected_cmdline_params:
+          nomodeset:
+          foo: baz
+      # Should add new parameters (both key=value and flags)
+      grub-config-duplicate-nomodeset:
+        grub_config_initial_test_values: ''
+        grub_config_entries_to_set:
+          nomodeset:
+          foo: bar
+        expected_cmdline_params:
+          nomodeset:
+          foo: bar
+  env:
+    ANSIBLE_ROLES_PATH: ../../voraus/ipc_tools/roles/
+  playbooks:
+    prepare: prepare.yml
+    converge: ../shared/converge.yml
+verifier:
+  name: testinfra
+  options:
+    # https://github.com/pytest-dev/pytest-testinfra/issues/58#issuecomment-1839460327
+    # pytest-ansible conflicts with --connection
+    p: 'no:pytest-ansible'
+
+    # avoid loading global pyproject.toml options, so we don't
+    # load the setting that says "disable testinfra"
+    c: '.'
