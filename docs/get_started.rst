@@ -25,6 +25,7 @@ The collection currently contains the following roles, please refer to their ind
 
    roles/wibu_codemeter/README
    roles/wibu_axprotector/README
+   roles/grub_config/README
    roles/realtime_kernel/README
    roles/core_isolation/README
 

@@ -1,0 +1,48 @@
+---
+- name: Gather facts and set variables
+  ansible.builtin.include_tasks: set_variables.yml
+
+- name: Adding kernel parameter to GRUB config
+  when: grub_config_resulting_params != grub_config_current_params
+  ansible.builtin.replace:
+    path: '{{ grub_config_file }}'
+    regexp: '^{{ grub_config_line }}="((\w.?)*)"$'
+    replace: |
+      {{ grub_config_line }}="{%- for key, value in grub_config_resulting_params.items() -%}
+      {%- if value and value != '' -%}
+      {{ key }}={{ value }}
+      {%- else -%}
+      {{ key }}
+      {%- endif -%}
+      {%- if not loop.last %} {% endif -%}
+      {%- endfor -%}"
+  register: grub_config_write_params
+
+- name: Re-generate kernel
+  when: grub_config_write_params.changed # noqa no-handler
+  block:
+    - name: Check if /boot is mounted in read-only mode
+      # Returns 0 if /boot is mounted separately and in read-only mode, 1 if not and 2 if there is a syntax error.
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          grep "[[:space:]]ro[[:space:],]" /proc/mounts | grep /boot
+        executable: /bin/bash
+
+      register: grub_config_grep_boot
+      failed_when: grub_config_grep_boot.rc > 1
+      changed_when: false # Do not count this task into the "changed" state
+
+    - name: Remount /boot partition in read-write mode if necessary
+      when: grub_config_grep_boot.rc == 0
+      ansible.posix.mount:
+        path: /boot
+        state: remounted
+        fstype: auto
+        opts: rw
+
+    - name: Update GRUB # noqa no-changed-when
+      ansible.builtin.command: update-grub2
+
+    - name: Reboot system
+      ansible.builtin.reboot:

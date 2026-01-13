@@ -1,0 +1,4 @@
+---
+grub_config_file: /etc/default/grub
+grub_config_line: GRUB_CMDLINE_LINUX_DEFAULT
+grub_config_entries_to_set: {}

@@ -1,0 +1,51 @@
+---
+- name: Ensure GRUB config file exists
+  ansible.builtin.stat:
+    path: '{{ grub_config_file }}'
+  register: grub_config_exists
+  failed_when: not grub_config_exists.stat.exists
+  changed_when: false # Do not count this task into the "changed" state
+
+- name: Search config entry in grub config
+  ansible.builtin.shell: "grep '^{{ grub_config_line }}=.*' {{ grub_config_file }}"
+  register: grub_config_line_exists
+  failed_when: grub_config_line_exists.rc > 0
+  changed_when: false # Do not count this task into the "changed" state
+
+- name: Read current kernel parameters from GRUB config
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      grep '^{{ grub_config_line }}=' {{ grub_config_file }} | sed 's/^{{ grub_config_line }}="\(.*\)"$/\1/'
+    executable: /bin/bash
+  register: grub_config_current_params_raw
+  failed_when: grub_config_current_params_raw.rc > 0
+  changed_when: false # Do not count this task into the "changed" state
+
+- name: Parse current kernel parameters into dict
+  ansible.builtin.set_fact:
+    grub_config_current_params: |
+      {%- set result = {} -%}
+      {%- for param in grub_config_current_params_raw.stdout.split() -%}
+        {%- if '=' in param -%}
+          {%- set key_value = param.split('=', 1) -%}
+          {%- set _ = result.update({key_value[0]: key_value[1]}) -%}
+        {%- else -%}
+          {%- set _ = result.update({param: none}) -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {{ result }}
+  changed_when: false # Do not count this task into the "changed" state
+
+- name: Build resulting parameters by merging current with entries to set
+  ansible.builtin.set_fact:
+    grub_config_resulting_params: |
+      {%- set result = grub_config_current_params | combine(grub_config_entries_to_set | default({})) -%}
+      {{ result }}
+  changed_when: false # Do not count this task into the "changed" state
+
+- name: Print kernel parameter changes
+  ansible.builtin.debug:
+    msg:
+      - 'Current params: {{ grub_config_current_params }}'
+      - 'Resulting params: {{ grub_config_resulting_params }}'
