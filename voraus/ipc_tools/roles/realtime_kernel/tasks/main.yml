@@ -13,7 +13,11 @@
       }}
 
 - name: Update kernel parameters if necessary
-  ansible.builtin.include_tasks: update_kernel_params.yml
+  ansible.builtin.include_role:
+    name: voraus.ipc_tools.grub_config
+  vars:
+    grub_config_entries_to_set:
+      nomodeset:
   register: realtime_kernel_kernel_params_update
 
 - name: Run install/uninstall tasks
