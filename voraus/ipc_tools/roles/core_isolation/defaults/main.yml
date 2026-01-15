@@ -2,3 +2,15 @@
 # The CPU core IDs to isolate. These are blocked for general system and user processes
 core_isolation_isolated_core_ids:
   - 1
+
+core_isolation_env_isolated_cpus: VRT_COREISOLATION__IDS
+core_isolation_env_pinned_interface_prefix: VRT_INTERFACE_PINNING__
+
+# If enabled, the ``nomodeset`` kernel parameter is enabled. Recommended on non-graphical reliant systems.
+core_isolation_enable_nomodeset: true
+
+# Optionally pin network interface IRQ threads to specific CPU(s), for example
+# core_isolation_isolated_network_interfaces:
+#   eno1: 3
+#   enp6s0f0: 4,5
+core_isolation_isolated_network_interfaces: {}

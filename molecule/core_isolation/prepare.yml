@@ -1,0 +1,27 @@
+---
+- name: Import shared prepare playbook
+  ansible.builtin.import_playbook: ../shared/prepare.yml
+
+- name: Patch GRUB config
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Set initial kernel parameters in GRUB config
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="(.*)"$'
+        replace: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 {{ grub_initial_test_values }}"'
+      when:
+        - grub_initial_test_values is defined
+        - grub_initial_test_values | length > 0
+        - not (molecule_idempotence | default(false)) # Do not change values on idempotence test run
+      register: grub_molecule_prepare
+
+    - name: Update GRUB # noqa no-changed-when
+      when: grub_molecule_prepare.changed # noqa no-handler
+      ansible.builtin.command: update-grub2
+
+    - name: Reboot machine
+      when: grub_molecule_prepare.changed # noqa no-handler
+      ansible.builtin.reboot:
