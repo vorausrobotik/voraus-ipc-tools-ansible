@@ -140,6 +140,7 @@ extend-exclude = ["log"]
 "molecule/**" = [
     "D100", # Missing docstring in public module
     "D103", # Missing docstring in public function
+    "D104", # Missing docstring in public package
 ]
 
 [tool.ruff.lint.pydocstyle]
