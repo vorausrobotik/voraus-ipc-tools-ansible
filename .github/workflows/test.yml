@@ -43,8 +43,8 @@ jobs:
           sudo python3 -m venv /tmp/venv/
           sudo /tmp/venv/bin/pip install ".[dev]"
 
-      - name: Write version to galaxy.yml
-        run: sudo bash -c "source /tmp/venv/bin/activate && make version"
+      - name: Build collection
+        run: sudo bash -c "source /tmp/venv/bin/activate && make"
 
       - name: Install ansible dependencies
         run: |
