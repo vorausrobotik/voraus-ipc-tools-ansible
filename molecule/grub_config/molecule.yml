@@ -32,7 +32,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        role_name: grub_config
+        role_name: voraus.ipc_tools.grub_config
     host_vars:
       # No initial values, no values to add. Should not change anything
       grub-config-default:

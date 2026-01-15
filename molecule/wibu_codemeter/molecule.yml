@@ -1,6 +1,8 @@
 ---
 dependency:
   name: galaxy
+  options:
+    requirements-file: requirements.yml
 driver:
   name: vagrant
   provider:
@@ -18,9 +20,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        role_name: wibu_codemeter
-  env:
-    ANSIBLE_ROLES_PATH: ../../voraus/ipc_tools/roles/
+        role_name: voraus.ipc_tools.wibu_codemeter
   playbooks:
     prepare: ../shared/prepare.yml
     converge: ../shared/converge.yml

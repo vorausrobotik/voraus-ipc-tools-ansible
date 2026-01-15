@@ -1,6 +1,8 @@
 ---
 dependency:
   name: galaxy
+  options:
+    requirements-file: requirements.yml
 driver:
   name: vagrant
   provider:
@@ -25,9 +27,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        role_name: realtime_kernel
-  env:
-    ANSIBLE_ROLES_PATH: ../../voraus/ipc_tools/roles/
+        role_name: voraus.ipc_tools.realtime_kernel
   playbooks:
     prepare: prepare.yml
     converge: ../shared/converge.yml
