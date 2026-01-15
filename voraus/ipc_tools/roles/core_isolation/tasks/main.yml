@@ -1,70 +1,26 @@
 ---
-- name: Fail if only one CPU is present
-  ansible.builtin.fail:
-    msg: 'Core isolation requires at least 2 CPUs. Found only {{ ansible_processor_vcpus }} CPU(s).'
-  when: ansible_processor_vcpus | int < 2
+- name: Gather facts and set variables
+  ansible.builtin.include_tasks: set_variables.yml
 
-- name: Normalize isolated core IDs to list
-  ansible.builtin.set_fact:
-    core_isolation_isolated_core_ids_list: >-
-      {{
-        core_isolation_isolated_core_ids
-        if core_isolation_isolated_core_ids is iterable and core_isolation_isolated_core_ids is not string
-        else core_isolation_isolated_core_ids | string | split(',') | map('trim') | list
-      }}
-
-- name: Build list of all CPU IDs
-  ansible.builtin.set_fact:
-    core_isolation_all_cpus: '{{ range(0, ansible_processor_vcpus | int) | list }}'
-
-- name: Build list of allowed CPU IDs (excluding isolated cores)
-  ansible.builtin.set_fact:
-    core_isolation_allowed_cpus: "{{ core_isolation_all_cpus | difference(core_isolation_isolated_core_ids_list | map('int') | list) | list }}"
-
-- name: Build comma-separated string of allowed CPUs
-  ansible.builtin.set_fact:
-    core_isolation_allowed_cpus_str: "{{ core_isolation_allowed_cpus | join(',') }}"
-
-- name: Build comma-separated string of isolated CPUs
-  ansible.builtin.set_fact:
-    core_isolation_isolated_ids_str: "{{ core_isolation_isolated_core_ids_list | join(',') }}"
-
-- name: Create systemd drop-in directories for CPU isolation
-  loop:
-    - init.scope
-    - system.slice
-    - user.slice
-  ansible.builtin.file:
-    path: '/etc/systemd/system/{{ item }}.d'
-    state: directory
-    mode: '0755'
-
-- name: Deploy CPU isolation config for scopes
-  loop:
-    - init.scope
-  ansible.builtin.template:
-    src: 50-scope_cpu_isolation.conf.j2
-    dest: /etc/systemd/system/{{ item }}.d/50-cpu_isolation.conf
-    mode: '0644'
-  notify:
-    - Reload systemd
-
-- name: Deploy CPU isolation config for slices
-  loop:
-    - system.slice
-    - user.slice
-  ansible.builtin.template:
-    src: 50-slice_cpu_isolation.conf.j2
-    dest: '/etc/systemd/system/{{ item }}.d/50-cpu_isolation.conf'
-    mode: '0644'
-  notify:
-    - Reload systemd
+- name: Include IRQ management tasks
+  ansible.builtin.include_tasks: irq_management.yml
 
 - name: Write isolated core ids to /etc/environment
   ansible.builtin.lineinfile:
     path: /etc/environment
     state: present
-    regexp: '^VRT_COREISOLATION__IDS='
-    line: 'VRT_COREISOLATION__IDS=[{{ core_isolation_isolated_ids_str }}]'
+    regexp: '^{{ core_isolation_env_isolated_cpus }}='
+    line: '{{ core_isolation_env_isolated_cpus }}=[{{ core_isolation_isolated_ids_str }}]'
     create: true
     mode: '0644'
+
+- name: Set GRUB parameters
+  ansible.builtin.include_role:
+    name: voraus.ipc_tools.grub_config
+  vars:
+    grub_config_entries_to_set:
+      nomodeset: '{{ omit if not (core_isolation_enable_nomodeset | default(false) | bool) else None }}'
+      isolcpus: 'managed_irq,domain,{{ core_isolation_isolated_ids_str }}'
+      irqaffinity: '{{ core_isolation_allowed_cpus_str }}'
+      rcu_nocbs: '{{ core_isolation_isolated_ids_str }}'
+      rcu_nocb_poll:

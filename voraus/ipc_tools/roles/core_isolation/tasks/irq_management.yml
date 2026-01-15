@@ -1,0 +1,38 @@
+---
+- name: Install tuna and dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+      - tuna
+      - ethtool
+      - iproute2
+
+- name: Write network interface pinning to /etc/environment
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    state: present
+    regexp: '^{{ core_isolation_env_pinned_interface_prefix }}{{ item.key }}='
+    line: '{{ core_isolation_env_pinned_interface_prefix }}{{ item.key }}=[{{ item.value }}]'
+    create: true
+    mode: '0644'
+  loop: '{{ core_isolation_isolated_network_interfaces | dict2items }}'
+
+- name: Create/update IRQ management scripts and services
+  ansible.builtin.template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: '{{ item.mode }}'
+  loop:
+    - src: coreisolation.service.j2
+      dest: /etc/systemd/system/coreisolation.service
+      mode: '0644'
+    - src: coreisolation.sh.j2
+      dest: /usr/bin/coreisolation.sh
+      mode: '0755'
+
+- name: Enable and start coreisolation service
+  ansible.builtin.systemd_service:
+    name: coreisolation
+    state: started
+    scope: system
+    enabled: true

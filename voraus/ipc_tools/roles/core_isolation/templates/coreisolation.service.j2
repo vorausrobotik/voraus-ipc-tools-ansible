@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Core Isolation IRQ Management
+After=network.target
+Wants=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/coreisolation.sh
+EnvironmentFile=/etc/environment
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

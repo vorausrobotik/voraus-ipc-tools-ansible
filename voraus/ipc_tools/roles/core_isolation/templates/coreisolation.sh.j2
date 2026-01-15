@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+#
+# {{ ansible_managed }}
+# Core Isolation IRQ Management
+# Manages IRQ thread affinity for isolated CPUs and network interfaces
+#
+# Copyright (c) voraus robotik GmbH
+#
+
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
+# Global variable for tuna version
+TUNA_VERSION=""
+
+ensure_requirements () {
+    if ! command -v tuna &> /dev/null; then
+        echo "Error: tuna is not installed" >&2
+        exit 1
+    fi
+
+    if ! command -v ip -V &> /dev/null; then
+        echo "Error: iproute2 is not installed" >&2
+        exit 1
+    fi
+
+    TUNA_VERSION=$(tuna -v 2>&1 | grep -oP '\d+\.\d+(\.\d+)?' || echo "unknown")
+    echo "Using tuna version: ${TUNA_VERSION}"
+}
+
+move_network_irqs_to_pinned_cpus () {
+    PREFIX="{{ core_isolation_env_pinned_interface_prefix }}"
+    interface_vars=()
+    while IFS= read -r var_name; do
+        interface_vars+=("$var_name")
+    done < <(env | grep "^${PREFIX}" | cut -d= -f1)
+
+    if [[ ${{ '{#' }}interface_vars[@]} -gt 0 ]]; then
+        for var_name in "${interface_vars[@]}"; do
+            interface_name="${var_name#$PREFIX}"
+            cpus=$(echo "${!var_name}" | tr -d "[]")
+
+            echo "Moving interrupt thread of interface ${interface_name} to CPU(s): ${cpus}"
+
+            # Check if interface exists
+            if ! ip link show "${interface_name}" &> /dev/null; then
+                echo "Warning: Interface ${interface_name} does not exist, skipping" >&2
+                continue
+            fi
+
+            echo "Bringing up interface ${interface_name} to ensure IRQ threads exist"
+            ip link set dev "${interface_name}" up || echo "Warning: Failed to bring up ${interface_name}" >&2
+
+            if [[ "${TUNA_VERSION}" == "0.15" ]]; then
+                tuna --cpus "${cpus}" --irqs "*${interface_name}*" --move
+            else
+                tuna move --cpus "${cpus}" --irqs "*${interface_name}*"
+            fi
+        done
+    else
+        echo "No interface related pinning configured"
+    fi
+}
+
+
+ensure_requirements
+move_network_irqs_to_pinned_cpus
+
+exit 0

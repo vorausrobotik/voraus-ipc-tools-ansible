@@ -10,8 +10,26 @@ driver:
     name: libvirt
 platforms:
   - name: core-isolation-test
-    box: generic/debian12
-    memory: 1024
+    box: debian/bookworm64
+    memory: 512
+    cpus: 4
+    provider_raw_config_args:
+      - "nic_model_type = 'e1000'" # Required for IRQ management, virtio interfaces to not have IRQ threads
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
+  - name: core-isolation-test-without-nomodeset
+    box: debian/bookworm64
+    memory: 512
+    cpus: 4
+    provider_raw_config_args:
+      - "nic_model_type = 'e1000'" # Required for IRQ management, virtio interfaces to not have IRQ threads
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
+  - name: core-isolation-update-cpu-list
+    box: debian/bookworm64
+    memory: 512
     cpus: 4
     networks:
       - name: 'public_network'
@@ -23,8 +41,48 @@ provisioner:
       all:
         role_name: voraus.ipc_tools.core_isolation
         core_isolation_isolated_core_ids: [1, 3]
+
+    host_vars:
+      core-isolation-test:
+        core_isolation_isolated_network_interfaces:
+          eth0: 1
+        expected_cmdline_params:
+          irqaffinity: '0,2'
+          isolcpus: 'managed_irq,domain,1,3'
+          rcu_nocbs: '1,3'
+          rcu_nocb_poll:
+          nomodeset:
+        expected_environment_variables:
+          - VRT_COREISOLATION__IDS=[1,3]
+          - VRT_INTERFACE_PINNING__eth0=[1]
+      core-isolation-test-without-nomodeset:
+        core_isolation_isolated_network_interfaces:
+          eth0: 1,3
+        core_isolation_enable_nomodeset: false
+        expected_cmdline_params:
+          irqaffinity: '0,2'
+          isolcpus: 'managed_irq,domain,1,3'
+          rcu_nocbs: '1,3'
+          rcu_nocb_poll:
+        expected_environment_variables:
+          - VRT_COREISOLATION__IDS=[1,3]
+          - VRT_INTERFACE_PINNING__eth0=[1,3]
+      core-isolation-update-cpu-list:
+        # Start the test box with initial irq affinity values. They need to be updated
+        grub_initial_test_values: 'irqaffinity=0,1 rcu_nocbs=2,3 rcu_nocb_poll'
+        expected_cmdline_params:
+          irqaffinity: '0,2'
+          isolcpus: 'managed_irq,domain,1,3'
+          rcu_nocbs: '1,3'
+          rcu_nocb_poll:
+          nomodeset:
+
+        # Does not contain interface pinning since it is not configured
+        expected_environment_variables:
+          - VRT_COREISOLATION__IDS=[1,3]
+
   playbooks:
-    prepare: ../shared/prepare.yml
+    prepare: prepare.yml
     converge: ../shared/converge.yml
 verifier:
   name: testinfra

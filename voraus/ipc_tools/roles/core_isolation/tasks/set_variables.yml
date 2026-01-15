@@ -1,0 +1,30 @@
+---
+- name: Fail if only one CPU is present
+  ansible.builtin.fail:
+    msg: 'Core isolation requires at least 2 CPUs. Found only {{ ansible_processor_vcpus }} CPU(s).'
+  when: ansible_processor_vcpus | int < 2
+
+- name: Normalize isolated core IDs to list
+  ansible.builtin.set_fact:
+    core_isolation_isolated_core_ids_list: >-
+      {{
+        core_isolation_isolated_core_ids
+        if core_isolation_isolated_core_ids is iterable and core_isolation_isolated_core_ids is not string
+        else core_isolation_isolated_core_ids | string | split(',') | map('trim') | list
+      }}
+
+- name: Build list of all CPU IDs
+  ansible.builtin.set_fact:
+    core_isolation_all_cpus: '{{ range(0, ansible_processor_vcpus | int) | list }}'
+
+- name: Build list of allowed CPU IDs (excluding isolated cores)
+  ansible.builtin.set_fact:
+    core_isolation_allowed_cpus: "{{ core_isolation_all_cpus | difference(core_isolation_isolated_core_ids_list | map('int') | list) | list }}"
+
+- name: Build comma-separated string of allowed CPUs
+  ansible.builtin.set_fact:
+    core_isolation_allowed_cpus_str: "{{ core_isolation_allowed_cpus | join(',') }}"
+
+- name: Build comma-separated string of isolated CPUs
+  ansible.builtin.set_fact:
+    core_isolation_isolated_ids_str: "{{ core_isolation_isolated_core_ids_list | join(',') }}"

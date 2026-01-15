@@ -1,30 +1,21 @@
 import pytest
 from testinfra.host import Host
 
-
-@pytest.mark.parametrize(
-    ("unit_name", "section_type"),
-    [
-        ("init.scope", "Scope"),
-        ("system.slice", "Slice"),
-        ("user.slice", "Slice"),
-    ],
-)
-def test_systemd_cpu_isolation_config(host: Host, unit_name: str, section_type: str) -> None:
-    """Test that the CPU isolation config file exists with correct content."""
-    config_file = host.file(f"/etc/systemd/system/{unit_name}.d/50-cpu_isolation.conf")
-    assert config_file.exists
-    assert config_file.is_file
-    assert config_file.mode == 0o644
-    assert f"[{section_type}]" in config_file.content_string
-    assert "AllowedCPUs=0,2" in config_file.content_string
+from ...shared.test_utils import assert_kernel_params
 
 
-def test_environment_variable_is_set(host: Host) -> None:
-    """Test that VRT_COREISOLATION__IDS is set in /etc/environment."""
+def test_expected_kernel_params(host: Host) -> None:
+    # Get expected parameters from host variables
+    host_variables = host.ansible.get_variables()
+    assert_kernel_params(host=host, expected_params=host_variables.get("expected_cmdline_params", {}))
+
+
+def test_environment_variables_are_set(host: Host) -> None:
     env_file = host.file("/etc/environment")
+    expected_variables = host.ansible.get_variables().get("expected_environment_variables", {})
     assert env_file.exists
-    assert "VRT_COREISOLATION__IDS=[1,3]" in env_file.content_string
+    for expected_variable in expected_variables:
+        assert expected_variable in env_file.content_string
 
 
 @pytest.mark.parametrize(
