@@ -1,0 +1,6 @@
+---
+- name: Install AxProtector in the requested version
+  ansible.builtin.apt:
+    update_cache: true
+    name: "{{ package_name }}{{ ('=' + package_version) if package_version else '' }}"
+    state: present

@@ -23,6 +23,13 @@
     state: present
     update_cache: true
 
-- name: Include CodeMeter tasks
-  when: "'codemeter-lite' in wibu_packages"
-  ansible.builtin.include_tasks: install_codemeter.yml
+- name: Include package specific tasks
+  ansible.builtin.include_tasks: 'install_{{ package_mapping[item.key] }}.yml'
+  loop: '{{ wibu_packages_install | dict2items }}'
+  vars:
+    package_name: '{{ item.key }}'
+    package_version: '{{ item.value }}'
+    package_mapping:
+      codemeter-lite: codemeter
+      axprotector: axprotector
+  when: 'item.key in package_mapping'

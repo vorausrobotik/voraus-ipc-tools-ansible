@@ -1,4 +1,16 @@
+import pytest
 from testinfra.host import Host
+from testinfra.modules.package import Package
+
+
+@pytest.mark.parametrize(
+    ("package_name", "package_version"),
+    [("codemeter-lite", "8.20.6539.500"), ("axprotector", "11.70.7131.502")],
+)
+def test_packages_installed(package_name: str, package_version: str, host: Host) -> None:
+    package: Package = host.package(package_name)
+    assert package.is_installed
+    assert package.version == package_version
 
 
 def test_codemeter_listens(host: Host) -> None:

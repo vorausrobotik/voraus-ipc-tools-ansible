@@ -9,7 +9,7 @@
 
 - name: Install codemeter in the requested version
   ansible.builtin.apt:
-    name: 'codemeter-lite={{ wibu_packages["codemeter-lite"] }}'
+    name: "{{ package_name }}{{ ('=' + package_version) if package_version else '' }}"
     state: present
   notify:
     - Stop CodeMeter Systemd Service
