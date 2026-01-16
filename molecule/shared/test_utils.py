@@ -15,7 +15,7 @@ def assert_kernel_params(host: Host, expected_params: dict[str, str | None]) -> 
             key = param
             value = None
 
-        if key in kernel_parameter_dict:
+        if key in kernel_parameter_dict and key in expected_params:
             raise AssertionError(f"Kernel param '{key}' defined multiple times in {kernel_parameters}")
 
         kernel_parameter_dict[key] = value

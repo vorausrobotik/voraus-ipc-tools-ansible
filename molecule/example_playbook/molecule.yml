@@ -10,7 +10,7 @@ driver:
     name: libvirt
 platforms:
   - name: example-test
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 1024
     cpus: 4
     provider_raw_config_args:

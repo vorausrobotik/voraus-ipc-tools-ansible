@@ -10,7 +10,7 @@ driver:
     name: libvirt
 platforms:
   - name: core-isolation-test
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 512
     cpus: 4
     provider_raw_config_args:
@@ -19,7 +19,7 @@ platforms:
       - name: 'public_network'
         type: 'dhcp'
   - name: core-isolation-test-without-nomodeset
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 512
     cpus: 4
     provider_raw_config_args:
@@ -28,7 +28,7 @@ platforms:
       - name: 'public_network'
         type: 'dhcp'
   - name: core-isolation-update-cpu-list
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 512
     cpus: 4
     networks:
