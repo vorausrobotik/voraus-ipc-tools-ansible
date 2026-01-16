@@ -1,6 +1,7 @@
 ---
-wibu_packages:
+wibu_packages_install:
   codemeter-lite: 8.20.6539.500
+  axprotector: 11.70.7131.502
 
 wibu_packages_cm_service_name: codemeter.service
 wibu_packages_cm_config_path: /etc/wibu/CodeMeter/Server.ini

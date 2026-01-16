@@ -3,6 +3,7 @@
 Install WiBu packages on the system that are required for handling licensed components
 
 - [CodeMeter](https://www.wibu.com/products/codemeter.html) (lite variant per default)
+- [AxProtector](https://www.wibu.com/products/protection-suite/axprotector.html)
 
 ## Requirements
 
