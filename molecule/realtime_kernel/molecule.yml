@@ -10,14 +10,14 @@ driver:
     name: libvirt
 platforms:
   - name: realtime-kernel-test
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 1024
     cpus: 1
     networks:
       - name: 'public_network'
         type: 'dhcp'
   - name: realtime-kernel-test-existing-nomodeset
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 1024
     cpus: 1
     networks:

@@ -7,21 +7,21 @@ driver:
     name: libvirt
 platforms:
   - name: grub-config-default
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 512
     cpus: 1
     networks:
       - name: 'public_network'
         type: 'dhcp'
   - name: grub-config-existing-nomodeset-override-key-value
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 512
     cpus: 1
     networks:
       - name: 'public_network'
         type: 'dhcp'
   - name: grub-config-duplicate-nomodeset
-    box: debian/bookworm64
+    box: cloud-image/debian-13
     memory: 512
     cpus: 1
     networks:
