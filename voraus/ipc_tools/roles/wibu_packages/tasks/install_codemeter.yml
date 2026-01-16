@@ -7,22 +7,9 @@
       - gnupg2
     state: present
 
-- name: Add wibu package maintainers GPG key to trusted keys
-  ansible.builtin.get_url:
-    url: https://wibu-packages.vorausrobotik.com/ubuntu/wibu-packages-maintainers.gpg
-    dest: /usr/share/keyrings/wibu-package-maintainers.asc
-    mode: '0644'
-
-- name: Add wibu packages apt repo
-  ansible.builtin.apt_repository:
-    repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.asc] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
-    filename: wibu_packages
-    state: present
-
 - name: Install codemeter in the requested version
   ansible.builtin.apt:
-    update_cache: true
-    name: '{{ wibu_codemeter_package_name }}={{ wibu_codemeter_package_version }}'
+    name: 'codemeter-lite={{ wibu_packages["codemeter-lite"] }}'
     state: present
   notify:
     - Stop CodeMeter Systemd Service
@@ -32,7 +19,7 @@
 
 - name: Configure License Server
   community.general.ini_file:
-    path: '{{ wibu_codemeter_config_path }}'
+    path: '{{ wibu_packages_cm_config_path }}'
     create: false
     section: '{{ item.section }}'
     option: '{{ item.option }}'
@@ -44,9 +31,9 @@
   with_items:
     - section: General
       option: IsNetworkServer
-      value: "{{ '1' if wibu_codemeter_is_network_server else '0' }}"
+      value: "{{ '1' if wibu_packages_cm_is_network_server else '0' }}"
     - section: General
       option: BindAddress
-      value: '{{ wibu_codemeter_bind_address }}'
+      value: '{{ wibu_packages_cm_bind_address }}'
   notify:
     - Enable and Start CodeMeter Systemd Service
