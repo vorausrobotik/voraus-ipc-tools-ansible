@@ -1,8 +1,21 @@
 # voraus.ipc_tools.core_isolation
 
-Installs configuration files on the target to isolate specified cores. Defaults to isolating the second core (id 1).
-You can pass further cores to be isolated by either passing the variable via CLI
-`-e '{"core_isolation_isolated_core_ids":"1,2"}'` or by setting it in your `inventory.yaml` or `defaults.yml`.
+This role configures CPU core isolation to enable deterministic execution of realtime applications on Linux systems.
+By isolating specific CPU cores from general system and user processes, it creates a dedicated environment for
+time-critical workloads such as robotic control systems, industrial automation, and realtime network communication.
+
+**Key Features:**
+
+- **CPU Core Isolation**: Isolates specified CPU cores using the `isolcpus` kernel parameter, preventing the scheduler
+  from assigning regular system tasks and user processes to these cores.
+- **IRQ Affinity Management**: Automatically configures interrupt request (IRQ) affinity to route system interrupts
+  away from isolated cores, minimizing latency and jitter.
+- **Network Interface Pinning**: Optionally pins network interface IRQ threads to specific CPU cores,
+  enabling deterministic realtime network communication.
+- **RCU Offloading**: Offloads Read-Copy-Update (RCU) callbacks from isolated cores using
+  `rcu_nocbs` and `rcu_nocb_poll` kernel parameters.
+- **Environment Variable Export**: Exports isolated core IDs and network interface pinning configuration
+  to `/etc/environment` for easy access by applications.
 
 ## Requirements
 
@@ -29,7 +42,14 @@ The following packages are installed by this role
       core_isolation_isolated_core_ids: 1,3,4,5,12,21
       core_isolation_isolated_network_interfaces:
         eno1: 3
-        enp6s0f0: 4,5
+        enp6s0f0: 4
+      core_isolation_enable_nomodeset: true
   roles:
     - voraus.ipc_tools.core_isolation
 ```
+
+For this example playbook, the following environment variables are exported system-wide:
+
+- `VRT_INTERFACE_PINNING__eno1=[3]`
+- `VRT_INTERFACE_PINNING__enp6s0f0=[4]`
+- `VRT_COREISOLATION__IDS=[1,3,4,5,12,21]`
