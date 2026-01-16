@@ -1,0 +1,28 @@
+---
+- name: Install apt dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+      - gnupg2
+      - curl
+    state: present
+
+- name: Download and dearmor wibu GPG key
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl -s --compressed https://wibu-packages.vorausrobotik.com/ubuntu/wibu-packages-maintainers.gpg | \
+    gpg --dearmor -o /usr/share/keyrings/wibu-package-maintainers.gpg
+  args:
+    executable: /bin/bash
+    creates: /usr/share/keyrings/wibu-package-maintainers.gpg
+
+- name: Add wibu packages apt repo
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.gpg] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
+    filename: voraus-wibu
+    state: present
+    update_cache: true
+
+- name: Include CodeMeter tasks
+  when: "'codemeter-lite' in wibu_packages"
+  ansible.builtin.include_tasks: install_codemeter.yml

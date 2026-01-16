@@ -23,8 +23,7 @@ The collection currently contains the following roles, please refer to their ind
    :glob:
    :maxdepth: 1
 
-   roles/wibu_codemeter/README
-   roles/wibu_axprotector/README
+   roles/wibu_packages/README
    roles/grub_config/README
    roles/realtime_kernel/README
    roles/core_isolation/README
