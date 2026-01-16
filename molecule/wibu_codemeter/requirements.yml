@@ -1,5 +1,0 @@
----
-collections:
-  - name: voraus.ipc_tools
-    source: voraus/ipc_tools
-    type: dir

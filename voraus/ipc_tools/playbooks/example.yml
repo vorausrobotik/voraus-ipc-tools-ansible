@@ -5,7 +5,7 @@
   roles:
     - voraus.ipc_tools.realtime_kernel
     - voraus.ipc_tools.core_isolation
-    - voraus.ipc_tools.wibu_codemeter
+    - voraus.ipc_tools.wibu_packages
     - geerlingguy.docker
   tasks:
     - name: Install base packages

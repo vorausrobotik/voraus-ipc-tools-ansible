@@ -9,7 +9,7 @@ driver:
   provider:
     name: libvirt
 platforms:
-  - name: wibu-codemeter-test
+  - name: wibu-packages-test
     box: debian/bookworm64
     memory: 1024
     cpus: 1
@@ -21,7 +21,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        role_name: voraus.ipc_tools.wibu_codemeter
+        role_name: voraus.ipc_tools.wibu_packages
   playbooks:
     prepare: ../shared/prepare.yml
     converge: ../shared/converge.yml
@@ -35,3 +35,6 @@ verifier:
     # avoid loading global pyproject.toml options, so we don't
     # load the setting that says "disable testinfra"
     c: '.'
+
+    # verbose output to show parametrized tests
+    v: true

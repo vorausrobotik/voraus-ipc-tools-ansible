@@ -1,11 +1,11 @@
 ---
 - name: Stop CodeMeter Systemd Service
   ansible.builtin.service:
-    name: '{{ wibu_codemeter_service_name }}'
+    name: '{{ wibu_packages_cm_service_name }}'
     state: stopped
 
 - name: Enable and Start CodeMeter Systemd Service
   ansible.builtin.service:
-    name: '{{ wibu_codemeter_service_name }}'
+    name: '{{ wibu_packages_cm_service_name }}'
     state: restarted
     enabled: true
