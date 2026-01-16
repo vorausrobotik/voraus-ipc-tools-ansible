@@ -52,6 +52,12 @@
         opts: rw
       when: realtime_kernel_grep_boot.rc == 0
 
+    - name: Install realtime kernel and header packages
+      ansible.builtin.apt:
+        update_cache: true
+        pkg: '{{ realtime_kernel_apt_packages }}'
+      register: realtime_kernel_apt_install
+
     - name: Remove non-rt kernel and header packages
       ansible.builtin.apt:
         name: '{{ realtime_kernel_non_rt_kernels }}'
@@ -59,12 +65,6 @@
         autoremove: true
         purge: true
       when: realtime_kernel_non_rt_kernels | length > 0
-
-    - name: Install realtime kernel
-      ansible.builtin.apt:
-        update_cache: true
-        pkg: '{{ realtime_kernel_apt_packages }}'
-      register: realtime_kernel_apt_install
 
     - name: Update GRUB # noqa no-changed-when
       when: >-
