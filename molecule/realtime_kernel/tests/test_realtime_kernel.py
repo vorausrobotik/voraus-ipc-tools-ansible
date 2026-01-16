@@ -4,7 +4,7 @@ from testinfra.host import Host
 
 
 def test_only_realtime_kernel_is_installed(host: Host) -> None:
-    menuentry_pattern = r"^\s*linux\s+.*(?P<kernel>vmlinuz-[\.\d-]*-rt[^\s]+)"
+    menuentry_pattern = r"^\s*linux\s+.*(?P<kernel>vmlinuz-[^\s]+)"
     grub_cfg_cmd = host.run("cat /boot/grub/grub.cfg")
     assert grub_cfg_cmd.rc == 0
     menu_entries = list(re.finditer(pattern=menuentry_pattern, string=grub_cfg_cmd.stdout, flags=re.MULTILINE))
