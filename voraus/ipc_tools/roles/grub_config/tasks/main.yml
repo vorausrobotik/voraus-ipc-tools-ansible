@@ -6,7 +6,7 @@
   when: grub_config_resulting_params != grub_config_current_params
   ansible.builtin.replace:
     path: '{{ grub_config_file }}'
-    regexp: '^{{ grub_config_line }}="((\w.?)*)"$'
+    regexp: '^{{ grub_config_line }}=".*"$'
     replace: |
       {{ grub_config_line }}="{%- for key, value in grub_config_resulting_params.items() -%}
       {%- if value and value != '' -%}
