@@ -38,14 +38,17 @@ The following packages are installed by this role
 ```yaml
 - hosts: servers
   vars:
-    grub_config_entries_to_set:
-      core_isolation_isolated_core_ids: 1,3,4,5,12,21
-      core_isolation_isolated_network_interfaces:
-        eno1: 3
-        enp6s0f0: 4
-      core_isolation_enable_nomodeset: true
+    core_isolation_isolated_core_ids: 1,3,4,5,12,21
+    core_isolation_isolated_network_interfaces:
+      eno1: 3
+      enp6s0f0: 4
+    core_isolation_enable_nomodeset: true
   roles:
     - voraus.ipc_tools.core_isolation
+```
+
+```{warning}
+It is not recommended to isolate CPU 0. It should be available for the OS and housekeeping tasks.
 ```
 
 For this example playbook, the following environment variables are exported system-wide:
