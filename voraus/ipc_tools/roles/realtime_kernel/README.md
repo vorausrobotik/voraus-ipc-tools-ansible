@@ -18,8 +18,6 @@ None.
 
 ```yaml
 - hosts: servers
-  collections:
-    - voraus.ipc_tools
   roles:
     - voraus.ipc_tools.realtime_kernel
 ```
