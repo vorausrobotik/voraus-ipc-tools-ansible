@@ -17,7 +17,7 @@ None.
 ## Example Playbook
 
 ```yaml
-- hosts: servers
+- hosts: all
 
   vars:
     grub_config_entries_to_set:

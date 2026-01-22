@@ -17,7 +17,7 @@ None.
 ## Example Playbook
 
 ```yaml
-- hosts: servers
+- hosts: all
   roles:
     - voraus.ipc_tools.realtime_kernel
 ```

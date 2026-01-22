@@ -36,7 +36,7 @@ The following packages are installed by this role
 ## Example Playbook
 
 ```yaml
-- hosts: servers
+- hosts: all
   vars:
     core_isolation_isolated_core_ids: 1,3,4,5,12,21
     core_isolation_isolated_network_interfaces:
