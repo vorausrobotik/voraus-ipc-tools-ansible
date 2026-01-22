@@ -11,6 +11,7 @@
   ansible.builtin.apt:
     name: "{{ package_name }}{{ ('=' + package_version) if package_version else '' }}"
     state: present
+    allow_downgrade: '{{ wibu_packages_allow_downgrades }}'
   notify:
     - Stop CodeMeter Systemd Service
 
