@@ -55,7 +55,7 @@ dev = [
 lint = [
     "voraus-ipc-tools-ansible[lint-template]",
     # Add additional linting dependencies here
-    "pylint-per-file-ignores==1.4.0",
+    "pylint-per-file-ignores==3.2.0",
     "pytest-testinfra",
     "myst-parser==5.0.0",
 ]
@@ -179,7 +179,7 @@ disable = """
     missing-function-docstring
     """
 per-file-ignores = [
-    "test_.*\\.py:missing-function-docstring,missing-module-docstring,duplicate-code",
+    "**/test_*.py:missing-function-docstring,missing-module-docstring,duplicate-code",
 ]
 
 [tool.pylint.similarities]
