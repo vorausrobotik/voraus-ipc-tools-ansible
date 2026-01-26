@@ -67,4 +67,9 @@ jobs:
           sudo vagrant plugin install vagrant-libvirt
 
       - name: Run Molecule tests for ${{ matrix.role }}
-        run: sudo bash -c "source /tmp/venv/bin/activate && molecule test -s ${{ matrix.role }}"
+        run: |
+          sudo bash -c "
+            source /tmp/venv/bin/activate && \
+            source scripts/setup-ansible-env.sh && \
+            molecule test -s ${{ matrix.role }}
+          "
