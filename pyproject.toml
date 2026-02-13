@@ -179,7 +179,7 @@ disable = """
     missing-function-docstring
     """
 per-file-ignores = [
-    "**/test_*.py:missing-function-docstring,missing-module-docstring,duplicate-code",
+    "molecule/**:missing-function-docstring,missing-module-docstring,duplicate-code",
 ]
 
 [tool.pylint.similarities]
@@ -224,3 +224,7 @@ ignore_missing_imports = true
 
 [tool.doc8]
 max-line-length = 120
+ignore-path = [
+    "docs/build",
+    "docs/license_compliance.rst",
+]
