@@ -1,8 +1,13 @@
 ---
+- name: Get number of processors
+  ansible.builtin.command: nproc --all
+  register: core_isolation_cpu_count
+  changed_when: false
+
 - name: Fail if only one CPU is present
   ansible.builtin.fail:
-    msg: 'Core isolation requires at least 2 CPUs. Found only {{ ansible_processor_vcpus }} CPU(s).'
-  when: ansible_processor_vcpus | int < 2
+    msg: 'Core isolation requires at least 2 CPUs. Found only {{ core_isolation_cpu_count.stdout }} CPU(s).'
+  when: core_isolation_cpu_count.stdout | int < 2
 
 - name: Normalize isolated core IDs to list
   ansible.builtin.set_fact:
@@ -15,7 +20,7 @@
 
 - name: Build list of all CPU IDs
   ansible.builtin.set_fact:
-    core_isolation_all_cpus: '{{ range(0, ansible_processor_vcpus | int) | list }}'
+    core_isolation_all_cpus: '{{ range(0, core_isolation_cpu_count.stdout | int) | list }}'
 
 - name: Build list of allowed CPU IDs (excluding isolated cores)
   ansible.builtin.set_fact:
