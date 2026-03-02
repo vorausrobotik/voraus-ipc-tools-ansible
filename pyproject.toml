@@ -35,7 +35,7 @@ dependencies = [
     # Add additional runtime dependencies below this line
     "ansible==12.3.0",
     "ansible-compat==25.12.1",
-    "ansible-dev-tools==26.1.0",
+    "ansible-dev-tools==26.2.0",
 ]
 
 [tool.setuptools.packages.find]
