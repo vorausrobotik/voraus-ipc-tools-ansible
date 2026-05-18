@@ -58,6 +58,22 @@
         pkg: '{{ realtime_kernel_apt_packages }}'
       register: realtime_kernel_apt_install
 
+    - name: Refresh package facts after installation # noqa: no-handler
+      ansible.builtin.package_facts:
+        manager: auto
+      when: realtime_kernel_apt_install.changed
+
+    - name: Update non-rt kernel package list after installation # noqa: no-handler
+      ansible.builtin.set_fact:
+        realtime_kernel_non_rt_kernels: >-
+          {{
+            ansible_facts.packages | dict2items
+            | selectattr('key', 'match', '^(linux-image-|linux-headers-)')
+            | rejectattr('key', 'match', '.*rt.*')
+            | map(attribute='key') | list
+          }}
+      when: realtime_kernel_apt_install.changed
+
     - name: Remove non-rt kernel and header packages
       ansible.builtin.apt:
         name: '{{ realtime_kernel_non_rt_kernels }}'
