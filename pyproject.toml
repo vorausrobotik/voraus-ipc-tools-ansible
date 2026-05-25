@@ -57,7 +57,7 @@ lint = [
     # Add additional linting dependencies here
     "pylint-per-file-ignores==3.2.1",
     "pytest-testinfra",
-    "myst-parser==5.0.0",
+    "myst-parser==5.1.0",
 ]
 test = [
     "voraus-ipc-tools-ansible[test-template]",
@@ -69,7 +69,7 @@ test = [
 doc = [
     "voraus-ipc-tools-ansible[doc-template]",
     # Add additional documentation dependencies below this line
-    "myst-parser==5.0.0",
+    "myst-parser==5.1.0",
 ]
 build = [
     "voraus-ipc-tools-ansible[build-template]",
