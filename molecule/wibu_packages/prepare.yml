@@ -1,0 +1,35 @@
+---
+- name: Import shared prepare playbook
+  ansible.builtin.import_playbook: ../shared/prepare.yml
+
+- name: Provision old wibu apt repo and GPG key
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install dependencies for old repo provisioning
+      ansible.builtin.apt:
+        pkg:
+          - gnupg2
+          - curl
+        state: present
+        update_cache: true
+      when: wibu_packages_provision_old_repo | default(false)
+
+    - name: Download and dearmor old wibu GPG key
+      ansible.builtin.shell: |
+        set -o pipefail
+        curl -s --compressed https://wibu-packages.vorausrobotik.com/ubuntu/wibu-packages-maintainers.gpg | \
+        gpg --dearmor -o /usr/share/keyrings/wibu-package-maintainers.gpg
+      args:
+        executable: /bin/bash
+        creates: /usr/share/keyrings/wibu-package-maintainers.gpg
+      when: wibu_packages_provision_old_repo | default(false)
+
+    - name: Add old wibu apt repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.gpg] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
+        filename: voraus-wibu
+        state: present
+        update_cache: true
+      when: wibu_packages_provision_old_repo | default(false)

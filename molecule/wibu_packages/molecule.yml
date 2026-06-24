@@ -16,14 +16,28 @@ platforms:
     networks:
       - name: 'public_network'
         type: 'dhcp'
+  - name: wibu-packages-old-repo-present
+    box: cloud-image/debian-13
+    memory: 1024
+    cpus: 1
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
 provisioner:
   name: ansible
   inventory:
     group_vars:
       all:
         role_name: voraus.ipc_tools.wibu_packages
+    host_vars:
+      # Clean machine without the old repo/key
+      wibu-packages-test:
+        wibu_packages_provision_old_repo: false
+      # Machine pre-provisioned with the old wibu repo and GPG key
+      wibu-packages-old-repo-present:
+        wibu_packages_provision_old_repo: true
   playbooks:
-    prepare: ../shared/prepare.yml
+    prepare: prepare.yml
     converge: ../shared/converge.yml
 verifier:
   name: testinfra

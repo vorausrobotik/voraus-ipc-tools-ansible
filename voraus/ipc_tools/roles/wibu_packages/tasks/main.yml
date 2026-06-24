@@ -7,21 +7,20 @@
       - curl
     state: present
 
-- name: Download and dearmor wibu GPG key
+- name: Clean up old wibu apt repo and GPG key
+  ansible.builtin.include_tasks: cleanup_old_repo.yml
+
+- name: Download and dearmor voraus GPG key
   ansible.builtin.shell: |
     set -o pipefail
-    curl -s --compressed https://wibu-packages.vorausrobotik.com/ubuntu/wibu-packages-maintainers.gpg | \
-    gpg --dearmor -o /usr/share/keyrings/wibu-package-maintainers.gpg
+    curl -s --compressed https://voraus.jfrog.io/ui/api/v1/ui/security/keyPairs/voraus-gpg/public | \
+    gpg --dearmor -o /etc/apt/trusted.gpg.d/vorausrobotik.gpg
   args:
     executable: /bin/bash
-    creates: /usr/share/keyrings/wibu-package-maintainers.gpg
+    creates: /etc/apt/trusted.gpg.d/vorausrobotik.gpg
 
-- name: Add wibu packages apt repo
-  ansible.builtin.apt_repository:
-    repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.gpg] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
-    filename: voraus-wibu
-    state: present
-    update_cache: true
+- name: Add voraus packages apt repo
+  ansible.builtin.include_tasks: add_voraus_repo.yml
 
 - name: Include package specific tasks
   ansible.builtin.include_tasks: 'install_{{ package_mapping[item.key] }}.yml'
