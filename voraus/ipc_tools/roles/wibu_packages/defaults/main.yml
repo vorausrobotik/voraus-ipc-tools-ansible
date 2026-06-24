@@ -1,7 +1,7 @@
 ---
 wibu_packages_install:
-  codemeter-lite: 8.20.6539.500
-  axprotector: 11.70.7131.502
+  codemeter-lite: 9.0.8031.500
+  axprotector: 11.80.8031.500
 
 wibu_packages_allow_downgrades: true
 

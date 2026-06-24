@@ -26,8 +26,6 @@
     option: '{{ item.option }}'
     value: '{{ item.value }}'
     ignore_spaces: true
-    owner: daemon
-    group: daemon
     mode: '0644'
   with_items:
     - section: General

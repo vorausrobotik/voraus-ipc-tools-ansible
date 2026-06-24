@@ -1,0 +1,12 @@
+---
+- name: Remove old wibu apt repo
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.gpg] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
+    filename: voraus-wibu
+    state: absent
+    update_cache: true
+
+- name: Remove old wibu GPG key
+  ansible.builtin.file:
+    path: /usr/share/keyrings/wibu-package-maintainers.gpg
+    state: absent

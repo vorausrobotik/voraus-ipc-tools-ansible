@@ -1,0 +1,32 @@
+---
+# Debian 13+ deprecates one-line .list sources in favor of the deb822 .sources
+# format, so use deb822_repository there and apt_repository on older releases.
+- name: Determine whether to use the deb822 sources format
+  ansible.builtin.set_fact:
+    wibu_packages_use_deb822: "{{ ansible_distribution == 'Debian' and ansible_distribution_major_version is version('13', '>=') }}"
+
+- name: Add voraus packages apt repo (deb822 format)
+  ansible.builtin.deb822_repository:
+    name: voraus
+    types: deb
+    uris: https://voraus.jfrog.io/artifactory/debian
+    suites: stable
+    components: main
+    architectures: amd64
+    signed_by: /etc/apt/trusted.gpg.d/vorausrobotik.gpg
+    state: present
+  when: wibu_packages_use_deb822
+  register: wibu_packages_deb822_repo
+
+- name: Update apt cache after adding deb822 repo # noqa: no-handler
+  ansible.builtin.apt:
+    update_cache: true
+  when: wibu_packages_deb822_repo is changed
+
+- name: Add voraus packages apt repo (one-line format)
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/vorausrobotik.gpg] https://voraus.jfrog.io/artifactory/debian stable main'
+    filename: voraus
+    state: present
+    update_cache: true
+  when: not wibu_packages_use_deb822
