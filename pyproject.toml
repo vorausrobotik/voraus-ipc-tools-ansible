@@ -87,7 +87,7 @@ tox = ["tox==4.56.4", "tox-uv~=1.28"]
 lint-template = [
     "isort==8.0.1",
     "black==26.5.1",
-    "mypy==2.2.0",
+    "mypy==2.3.0",
     "pylint==4.0.6",
     "pytest==9.1.1",
     "doc8==2.0.0",
