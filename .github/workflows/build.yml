@@ -13,15 +13,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v9.0.0
         with:
-          python-version: '3.13'
-
-      - name: Install dependencies
-        run: pip install --upgrade pip tox && pip install ".[dev]"
+          enable-cache: true
 
       - name: Build
-        run: tox -e build
+        run: uv run --locked --extra tox tox -e build
 
       - name: Require non dirty git workspace
         run: |

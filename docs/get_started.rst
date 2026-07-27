@@ -5,13 +5,13 @@ Getting Started
 Requirements
 ************
 
-Create a python3 virtual environment and install the dependencies:
+This project uses `uv <https://docs.astral.sh/uv/>`_. It creates the virtual
+environment, installs the Python version pinned in ``.python-version`` and
+installs the exact dependency versions recorded in ``uv.lock``:
 
 ..  code-block:: shell
 
-    python3 -m venv venv
-    source venv/bin/activate
-    pip install --upgrade pip tox && pip install .
+    uv sync --locked
 
 
 Roles
@@ -37,5 +37,17 @@ In order to modify and test the roles locally, install the development dependenc
 
 ..  code-block:: shell
 
-    source venv/bin/activate
-    pip install --upgrade ".[dev]"
+    uv sync --locked --all-extras
+
+Run the checks through tox, which installs each environment from ``uv.lock``:
+
+..  code-block:: shell
+
+    uv run --extra tox tox -e lint
+
+After changing a dependency in ``pyproject.toml``, refresh the lockfile and commit
+it, otherwise the ``--locked`` flag makes CI fail:
+
+..  code-block:: shell
+
+    uv lock

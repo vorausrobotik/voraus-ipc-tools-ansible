@@ -10,7 +10,7 @@ jobs:
       roles: ${{ steps.discover.outputs.roles }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Find roles with Molecule tests
         id: discover
@@ -34,22 +34,22 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v9.0.0
         with:
-          python-version: 3.13
+          enable-cache: true
 
-      - name: Create venv and install python dependencies
-        run: |
-          sudo python3 -m venv /tmp/venv/
-          sudo /tmp/venv/bin/pip install ".[dev]"
+      # Creates `.venv` from uv.lock. Molecule needs root for vagrant/libvirt, so the
+      # later steps run under sudo against this venv rather than installing as root.
+      - name: Install python dependencies
+        run: uv sync --locked --all-extras
 
       - name: Build collection
-        run: sudo bash -c "source /tmp/venv/bin/activate && make"
+        run: sudo bash -c "source .venv/bin/activate && make"
 
       - name: Install ansible dependencies
         run: |
-          sudo /tmp/venv/bin/ansible-galaxy collection install -r requirements.yml
-          sudo /tmp/venv/bin/ansible-galaxy role install -r requirements.yml
+          sudo .venv/bin/ansible-galaxy collection install -r requirements.yml
+          sudo .venv/bin/ansible-galaxy role install -r requirements.yml
 
       - name: Install dependencies
         run: |
@@ -69,7 +69,7 @@ jobs:
       - name: Run Molecule tests for ${{ matrix.role }}
         run: |
           sudo bash -c "
-            source /tmp/venv/bin/activate && \
+            source .venv/bin/activate && \
             source scripts/setup-ansible-env.sh && \
             molecule test -s ${{ matrix.role }}
           "
