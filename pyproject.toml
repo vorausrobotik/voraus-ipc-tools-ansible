@@ -15,16 +15,13 @@ description = "voraus IPC related Ansible roles and tools."
 license = { file = "LICENSE.txt" }
 readme = { file = "README.rst", content-type = "text/x-rst" }
 urls.Repository = "https://github.com/vorausrobotik/voraus-ipc-tools-ansible"
-requires-python = ">=3.11"
+requires-python = "==3.13.*"
 dynamic = ["version"] # Uses setuptools_scm to determine the version
 classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: Implementation :: PyPy",
     "Typing :: Typed",
 ]
 
