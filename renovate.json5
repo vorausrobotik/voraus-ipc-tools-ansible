@@ -1,0 +1,44 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+
+  // The org-wide baseline (config:best-practices, semantic `build(deps):` commits,
+  // nonOfficeHours schedule, labels) is applied by the self-hosted global config.
+  // See https://github.com/vorausrobotik/voraus-iac/blob/main/argocd/apps/renovate/README.md
+  // Only the repo-specific overrides belong here.
+
+  // One PR per manager instead of one PR per dependency. Later rules win, so the
+  // templated catch-all also groups any manager that gets detected in the future.
+  packageRules: [
+    {
+      matchPackageNames: ['*'],
+      groupName: '{{manager}} dependencies',
+      groupSlug: '{{manager}}',
+    },
+    {
+      matchManagers: ['pep621'],
+      groupName: 'Python dependencies',
+      groupSlug: 'python',
+    },
+    {
+      matchManagers: ['github-actions'],
+      groupName: 'GitHub Actions',
+      groupSlug: 'github-actions',
+    },
+    {
+      matchManagers: ['ansible-galaxy'],
+      groupName: 'Ansible Galaxy dependencies',
+      groupSlug: 'ansible-galaxy',
+    },
+    {
+      // The interpreter is pinned to 3.13 via `requires-python` and `.python-version`.
+      // Renovate treats `requires-python` as a bumpable dependency and would propose
+      // `==3.14.*`, silently undoing the pin. Interpreter changes stay manual.
+      matchManagers: ['pep621'],
+      matchDepTypes: ['requires-python'],
+      enabled: false,
+    },
+  ],
+
+  // Keep major bumps inside their manager's PR rather than on a branch of their own.
+  separateMajorMinor: false,
+}
