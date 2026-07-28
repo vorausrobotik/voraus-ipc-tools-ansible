@@ -20,21 +20,19 @@ This collection helps to set up a real-time system with all prerequisites to dep
 
 # Quickstart
 
-1. Create a Python virtual environment and install ansible and the collection
+1. Install ansible and the collection. This pulls in the `ansible.posix` and
+   `community.general` collections that this collection depends on.
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install ansible
+uv tool install ansible-core
 
-# Install the collection
 ansible-galaxy collection install voraus.ipc_tools
 ```
 
-1. Copy the [example inventory][3] to a `inventory.yml` file and change it according to your needs.
+2. Copy the [example inventory][3] to a `inventory.yml` file and change it according to your needs.
    In this example, we assume that the IPC is reachable via the IP address `192.168.1.1`.
 
-2. Run the [example playbook][4]
+3. Run the [example playbook][4]
    shipped with the collection.
 
 ```bash
@@ -49,7 +47,55 @@ Please refer to the [official documentation](https://vorausrobotik.github.io/vor
 
 <br />
 
+# Development
+
+This project is managed with [uv][5]. The following creates `.venv`, installs the Python version pinned in
+`.python-version` and installs the exact dependency versions recorded in `uv.lock`:
+
+```bash
+uv sync --locked --all-extras
+source .venv/bin/activate
+```
+
+All checks run through tox. Each tox environment is installed from `uv.lock` as well, so local runs and CI use
+identical package versions.
+
+| Command        | Purpose                                                           |
+| -------------- | ----------------------------------------------------------------- |
+| `tox -e lint`  | ansible-lint, prettier, isort, black, mypy, ruff, pylint and doc8 |
+| `tox -e docs`  | Run the doctests and build the Sphinx docs into `docs/build/html` |
+| `tox -e build` | Generate `galaxy.yml` and build the collection tarball            |
+| `tox -e test`  | Run the molecule test suite, see below                            |
+
+Without activating the environment, prefix the commands with `uv run --all-extras`, for example
+`uv run --all-extras tox -e lint`.
+
+After changing a dependency in `pyproject.toml`, refresh the lockfile and commit the result. CI installs with
+`--locked` and fails on a stale `uv.lock`:
+
+```bash
+uv lock
+```
+
+## Molecule tests
+
+`tox -e test` is intended for local use only. CI runs molecule per role in [`test.yml`][6], because every
+scenario boots a virtual machine and needs root privileges on the runner. Locally, `vagrant` and `libvirt` have to be
+available on the host.
+
+```bash
+# Run every scenario
+tox -e test
+
+# Run a single scenario
+tox -e test -- test -s grub_config
+```
+
+<br />
+
 [1]: https://vorausrobotik.com/produkte/#core
 [2]: https://www.debian.org/releases/trixie/
 [3]: https://github.com/vorausrobotik/voraus-ipc-tools-ansible/blob/main/inventory.example.yml
 [4]: https://github.com/vorausrobotik/voraus-ipc-tools-ansible/blob/main/voraus/ipc_tools/playbooks/example.yml
+[5]: https://docs.astral.sh/uv/
+[6]: https://github.com/vorausrobotik/voraus-ipc-tools-ansible/blob/main/.github/workflows/test.yml
