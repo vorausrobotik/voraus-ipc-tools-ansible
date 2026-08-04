@@ -5,7 +5,7 @@ from testinfra.modules.package import Package
 
 @pytest.mark.parametrize(
     ("package_name", "package_version"),
-    [("codemeter-lite", "9.0.8031.500"), ("axprotector", "11.80.8031.500")],
+    [("codemeter-lite", "9.10.8166.500"), ("axprotector", "11.80.8031.500")],
 )
 def test_packages_installed(package_name: str, package_version: str, host: Host) -> None:
     package: Package = host.package(package_name)
