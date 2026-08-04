@@ -36,3 +36,6 @@
       value: '{{ wibu_packages_cm_bind_address }}'
   notify:
     - Enable and Start CodeMeter Systemd Service
+
+- name: Configure the CodeMeter firewall
+  ansible.builtin.include_tasks: configure_firewall.yml

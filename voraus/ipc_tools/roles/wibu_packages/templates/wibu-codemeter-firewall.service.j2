@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+[Unit]
+Description=nftables rules restricting WiBu CodeMeter access to local and container networks
+Documentation=man:nft(8)
+Wants=network-pre.target
+Before=network-pre.target shutdown.target
+# Debian's /etc/nftables.conf starts with `flush ruleset`, so this table has to be loaded after
+# nftables.service to survive a boot on hosts on which that service is enabled
+After=nftables.service
+DefaultDependencies=no
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+StandardInput=null
+ExecStart=/usr/sbin/nft -f {{ wibu_packages_firewall_config_path }}
+ExecReload=/usr/sbin/nft -f {{ wibu_packages_firewall_config_path }}
+ExecStop=/usr/sbin/nft destroy table inet {{ wibu_packages_firewall_table_name }}
+
+[Install]
+WantedBy=sysinit.target
