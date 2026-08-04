@@ -4,6 +4,15 @@
 
 .. include:: get_started.rst
 
+#########
+Changelog
+#########
+
+.. toctree::
+   :maxdepth: 1
+
+   changelog
+
 ##############################
 License Compliance Information
 ##############################

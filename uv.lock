@@ -1334,20 +1334,6 @@ wheels = [
 ]
 
 [[package]]
-name = "setuptools-scm"
-version = "10.2.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "packaging" },
-    { name = "setuptools" },
-    { name = "vcs-versioning" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/5d/b1/d0b97ffd2856a7d19c63024a89fb84813cb9d2ed7fa8fdbedf9e2f13a9ab/setuptools_scm-10.2.1.tar.gz", hash = "sha256:4fa7dd82cf8c800df59c9a288c90299b1657ff1ecfc3f5cc00287c5dbf5e27a9", size = 154237, upload-time = "2026-07-21T08:08:04.553Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c3/b4/02ac1d9833b882c87b3a4e82703e70eac4ab33d0d15fb123e60bb01f3bc1/setuptools_scm-10.2.1-py3-none-any.whl", hash = "sha256:b7c82f4102d389ee57dc66ccdb4f9b4bca3c40ba83b43f1f63d68ccd72db2580", size = 29078, upload-time = "2026-07-21T08:08:03.293Z" },
-]
-
-[[package]]
 name = "snowballstemmer"
 version = "3.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1648,18 +1634,6 @@ wheels = [
 ]
 
 [[package]]
-name = "vcs-versioning"
-version = "2.2.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "packaging" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/e9/bb/5270e8ffd3123051ac4fbbaabf61afb8f27819ac8ced0f0cc4b24137d30e/vcs_versioning-2.2.3.tar.gz", hash = "sha256:c21e284aa98c8269996791a19d6173baf953cf9996ef42ec3ebcbdc151e18b9b", size = 143653, upload-time = "2026-07-28T21:07:36.045Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/95/2e/83be70d0379bbe17034e5d5960fae2a23cc136d466786607d2615ac2612b/vcs_versioning-2.2.3-py3-none-any.whl", hash = "sha256:4f7873af76f5cc24e701608354f376f5eb70b317d663787ace57a7edd7a27506", size = 108180, upload-time = "2026-07-28T21:07:33.842Z" },
-]
-
-[[package]]
 name = "virtualenv"
 version = "21.7.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1676,6 +1650,7 @@ wheels = [
 
 [[package]]
 name = "voraus-ipc-tools-ansible"
+version = "1.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "ansible" },
@@ -1687,7 +1662,6 @@ dependencies = [
 [package.optional-dependencies]
 build = [
     { name = "build", extra = ["virtualenv"] },
-    { name = "setuptools-scm" },
 ]
 build-template = [
     { name = "build", extra = ["virtualenv"] },
@@ -1711,7 +1685,6 @@ dev = [
     { name = "pytest-randomly" },
     { name = "pytest-testinfra" },
     { name = "ruff" },
-    { name = "setuptools-scm" },
     { name = "snowballstemmer" },
     { name = "sphinx" },
     { name = "sphinx-autodoc-typehints" },
@@ -1816,7 +1789,6 @@ requires-dist = [
     { name = "pytest-testinfra", marker = "extra == 'lint'" },
     { name = "pytest-testinfra", marker = "extra == 'test'", specifier = "==10.2.2" },
     { name = "ruff", marker = "extra == 'lint-template'", specifier = "==0.16.1" },
-    { name = "setuptools-scm", marker = "extra == 'build'" },
     { name = "snowballstemmer", marker = "extra == 'doc-template'", specifier = "==3.1.1" },
     { name = "sphinx", marker = "extra == 'doc-template'", specifier = "==9.1.0" },
     { name = "sphinx-autodoc-typehints", marker = "extra == 'doc-template'", specifier = "==3.13.2" },

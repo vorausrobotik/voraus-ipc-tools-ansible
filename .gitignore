@@ -3,9 +3,6 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
-# Ansible Galaxy file. This is generated with the `make, make version resp tox run -r build command`
-galaxy.yml
-
 # Exclude local development inventory file
 inventory.yml
 

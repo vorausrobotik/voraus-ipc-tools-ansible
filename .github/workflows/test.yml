@@ -30,9 +30,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          fetch-depth: 0
-          fetch-tags: true
 
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
@@ -44,7 +41,7 @@ jobs:
         run: uv sync --locked --all-extras
 
       - name: Build collection
-        run: sudo bash -c "source .venv/bin/activate && make"
+        run: sudo bash -c "source .venv/bin/activate && ansible-galaxy collection build --force voraus/ipc_tools"
 
       - name: Install ansible dependencies
         run: |
