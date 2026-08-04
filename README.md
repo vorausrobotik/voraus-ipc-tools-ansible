@@ -64,7 +64,7 @@ identical package versions.
 | -------------- | ----------------------------------------------------------------- |
 | `tox -e lint`  | ansible-lint, prettier, isort, black, mypy, ruff, pylint and doc8 |
 | `tox -e docs`  | Run the doctests and build the Sphinx docs into `docs/build/html` |
-| `tox -e build` | Generate `galaxy.yml` and build the collection tarball            |
+| `tox -e build` | Build the collection tarball                                      |
 | `tox -e test`  | Run the molecule test suite, see below                            |
 
 Without activating the environment, prefix the commands with `uv run --all-extras`, for example
@@ -91,6 +91,19 @@ tox -e test
 tox -e test -- test -s grub_config
 ```
 
+## Releasing
+
+Releases are cut by [release-please][7]. It keeps a release pull request open that collects every
+[Conventional Commit][8] merged into `main`, and derives the next version from those commit types. Merging that pull
+request is the release:
+
+1. `CHANGELOG.md`, `voraus/ipc_tools/galaxy.yml`, `pyproject.toml` and `uv.lock` are bumped to the same version.
+2. The `X.Y.Z` tag and the GitHub release are created.
+3. The tag triggers [`pipeline.yml`][9], which publishes the collection to Ansible Galaxy and the docs to GitHub Pages.
+
+Nothing is tagged or published by hand, so the only thing that decides the next version is the commit history. The
+sections of the changelog are configured in [`release-please-config.json`][10].
+
 <br />
 
 [1]: https://vorausrobotik.com/produkte/#core
@@ -99,3 +112,7 @@ tox -e test -- test -s grub_config
 [4]: https://github.com/vorausrobotik/voraus-ipc-tools-ansible/blob/main/voraus/ipc_tools/playbooks/example.yml
 [5]: https://docs.astral.sh/uv/
 [6]: https://github.com/vorausrobotik/voraus-ipc-tools-ansible/blob/main/.github/workflows/test.yml
+[7]: https://github.com/googleapis/release-please
+[8]: https://www.conventionalcommits.org/en/v1.0.0/
+[9]: https://github.com/vorausrobotik/voraus-ipc-tools-ansible/blob/main/.github/workflows/pipeline.yml
+[10]: https://github.com/vorausrobotik/voraus-ipc-tools-ansible/blob/main/release-please-config.json

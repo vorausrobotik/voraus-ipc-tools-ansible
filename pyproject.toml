@@ -1,13 +1,14 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
-
-# Enables the usage of setuptools_scm
-[tool.setuptools_scm]
 
 
 [project]
 name = "voraus-ipc-tools-ansible"
+# Kept in sync with the collection version in `voraus/ipc_tools/galaxy.yml` by
+# release-please, see `release-please-config.json`. This project is not published; the
+# version only exists so `uv.lock` and the docs can report the release it belongs to.
+version = "1.1.0"
 authors = [
     { name = "Jan-Frederik Schmidt", email = "jan-frederik.schmidt@vorausrobotik.com" },
 ]
@@ -16,7 +17,6 @@ license = { file = "LICENSE.txt" }
 readme = { file = "README.rst", content-type = "text/x-rst" }
 urls.Repository = "https://github.com/vorausrobotik/voraus-ipc-tools-ansible"
 requires-python = "==3.13.*"
-dynamic = ["version"] # Uses setuptools_scm to determine the version
 classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
@@ -71,7 +71,6 @@ doc = [
 build = [
     "voraus-ipc-tools-ansible[build-template]",
     # Add additional build dependencies below this line
-    "setuptools_scm",
 ]
 
 ###########################################################
