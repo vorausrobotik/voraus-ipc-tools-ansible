@@ -9,3 +9,14 @@
     name: '{{ wibu_packages_cm_service_name }}'
     state: restarted
     enabled: true
+
+# `ExecReload` applies the whole file in a single nftables transaction, so the ports are never
+# unprotected in between
+- name: Reload CodeMeter Firewall Rules
+  ansible.builtin.systemd_service:
+    name: '{{ wibu_packages_firewall_service_name }}'
+    state: reloaded
+
+- name: Reload Systemd Daemon
+  ansible.builtin.systemd_service:
+    daemon_reload: true

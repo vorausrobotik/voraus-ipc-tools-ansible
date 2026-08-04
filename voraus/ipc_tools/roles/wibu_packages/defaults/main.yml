@@ -9,3 +9,27 @@ wibu_packages_cm_service_name: codemeter.service
 wibu_packages_cm_config_path: /etc/wibu/CodeMeter/Server.ini
 wibu_packages_cm_is_network_server: true
 wibu_packages_cm_bind_address: '0.0.0.0'
+
+# The CodeMeter licensing port (TCP for the license protocol, UDP for network server discovery)
+wibu_packages_cm_port: 22350
+# The CodeMeter WebAdmin port
+wibu_packages_cm_webadmin_port: 22352
+
+# Restrict access to the CodeMeter ports to the host itself and to container networks using a
+# dedicated nftables table. Setting this to `false` removes the rules again.
+wibu_packages_firewall: true
+
+# Interfaces that are allowed to reach the licensing port. Wildcards are matched by nftables,
+# `br-*` covers user defined docker networks.
+wibu_packages_firewall_licensing_interfaces:
+  - lo
+  - docker0
+  - 'br-*'
+
+# Interfaces that are allowed to reach the WebAdmin port
+wibu_packages_firewall_webadmin_interfaces:
+  - lo
+
+wibu_packages_firewall_table_name: wibu_codemeter
+wibu_packages_firewall_config_path: /etc/nftables.d/wibu-codemeter.nft
+wibu_packages_firewall_service_name: wibu-codemeter-firewall.service

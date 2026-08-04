@@ -1,0 +1,37 @@
+---
+# Provisions the simulated remote sources for the CodeMeter firewall tests. A single VM has no
+# non-local source address, so both are simulated with a veth pair into a network namespace.
+#
+# This runs as a side effect and not during prepare, because network namespaces and veth pairs are
+# runtime state: scenarios that install a kernel or change the kernel cmdline reboot during
+# converge, which would wipe a harness created earlier.
+- name: Provision simulated remote sources for the firewall tests
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install dependencies for the firewall probes
+      ansible.builtin.apt:
+        pkg:
+          - iproute2
+          - netcat-openbsd
+        state: present
+        update_cache: true
+      when: wibu_packages_firewall_probes | default([]) | length > 0
+
+    - name: Create the probe network namespaces and veth pairs
+      ansible.builtin.shell:
+        cmd: |
+          set -euo pipefail
+          ip netns list | grep -qw '{{ item.namespace }}' || ip netns add '{{ item.namespace }}'
+          ip link show '{{ item.interface }}' > /dev/null 2>&1 || \
+            ip link add '{{ item.interface }}' type veth peer name veth-peer netns '{{ item.namespace }}'
+          ip address replace '{{ item.host_address }}/24' dev '{{ item.interface }}'
+          ip link set '{{ item.interface }}' up
+          ip -netns '{{ item.namespace }}' address replace '{{ item.peer_address }}/24' dev veth-peer
+          ip -netns '{{ item.namespace }}' link set veth-peer up
+        executable: /bin/bash
+      changed_when: true
+      loop: '{{ wibu_packages_firewall_probes | default([]) }}'
+      loop_control:
+        label: '{{ item.namespace }}'

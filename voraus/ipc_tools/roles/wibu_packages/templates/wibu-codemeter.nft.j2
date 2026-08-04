@@ -1,0 +1,33 @@
+#!/usr/sbin/nft -f
+#
+# {{ ansible_managed }}
+#
+# Restricts access to the WiBu CodeMeter ports to the host itself and to container networks.
+#
+# These rules live in their own table on purpose: a `drop` in any table is final, while an
+# `accept` only ends the evaluation of *this* chain. Docker's and any other ruleset therefore
+# stay untouched, and their `accept` rules cannot re-open the ports.
+
+# Replace a previously loaded revision, so that this file can be re-applied as a whole
+destroy table inet {{ wibu_packages_firewall_table_name }}
+
+table inet {{ wibu_packages_firewall_table_name }} {
+  chain input {
+    type filter hook input priority filter; policy accept;
+
+    # Licensing port. Wildcards only match in single value comparisons, not in sets,
+    # which is why every interface gets its own rule.
+{% for interface in wibu_packages_firewall_licensing_interfaces %}
+    iifname "{{ interface }}" tcp dport {{ wibu_packages_cm_port }} accept
+    iifname "{{ interface }}" udp dport {{ wibu_packages_cm_port }} accept
+{% endfor %}
+    tcp dport {{ wibu_packages_cm_port }} drop
+    udp dport {{ wibu_packages_cm_port }} drop
+
+    # WebAdmin port
+{% for interface in wibu_packages_firewall_webadmin_interfaces %}
+    iifname "{{ interface }}" tcp dport {{ wibu_packages_cm_webadmin_port }} accept
+{% endfor %}
+    tcp dport {{ wibu_packages_cm_webadmin_port }} drop
+  }
+}
