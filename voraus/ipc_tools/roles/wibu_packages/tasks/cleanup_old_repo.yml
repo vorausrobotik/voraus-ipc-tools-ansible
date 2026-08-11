@@ -1,12 +1,21 @@
 ---
-- name: Remove old wibu apt repo
-  ansible.builtin.apt_repository:
-    repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.gpg] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
-    filename: voraus-wibu
-    state: absent
-    update_cache: true
-
-- name: Remove old wibu GPG key
+# Sources and signing keys that earlier revisions of this role, or the pre-Artifactory instructions
+# of https://github.com/vorausrobotik/wibu-packages, left behind.
+- name: Remove legacy voraus apt sources and signing keys
   ansible.builtin.file:
-    path: /usr/share/keyrings/wibu-package-maintainers.gpg
+    path: '{{ item }}'
     state: absent
+  loop:
+    # The retired wibu-packages.vorausrobotik.com repository and its maintainers key. This role
+    # placed that key in `/usr/share/keyrings`, while the upstream README placed it in
+    # `/etc/apt/trusted.gpg.d`, from where apt trusts it for every repository.
+    - /etc/apt/sources.list.d/voraus-wibu.list
+    - /usr/share/keyrings/wibu-package-maintainers.gpg
+    - /etc/apt/trusted.gpg.d/wibu-packages-maintainers.gpg
+    # Artifactory sources written before this role used deb822 everywhere, and the Artifactory key
+    # it installed as a globally trusted one. Both are superseded by `vorausrobotik.sources` and the
+    # repository scoped keyring it references.
+    - /etc/apt/sources.list.d/voraus.list
+    - /etc/apt/sources.list.d/voraus.sources
+    - /etc/apt/trusted.gpg.d/vorausrobotik.gpg
+  register: wibu_packages_legacy_cleanup
