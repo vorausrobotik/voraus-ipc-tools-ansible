@@ -13,6 +13,20 @@ FIREWALL_UNIT_PATH = f"/etc/systemd/system/{FIREWALL_SERVICE}.service"
 # The verifier runs the tests through sudo, `nft` is not in the connecting user's PATH though
 NFT = "/usr/sbin/nft"
 
+APT_SOURCE_PATH = "/etc/apt/sources.list.d/vorausrobotik.sources"
+# The Artifactory key is served ASCII armored, which `deb822_repository` stores as `.asc`
+APT_KEYRING_PATH = "/etc/apt/keyrings/vorausrobotik.asc"
+# Sources and keys written by earlier revisions of this role or by the pre-Artifactory upstream
+# instructions. All of them must be gone once the role has run.
+LEGACY_APT_PATHS = [
+    "/etc/apt/sources.list.d/voraus-wibu.list",
+    "/usr/share/keyrings/wibu-package-maintainers.gpg",
+    "/etc/apt/trusted.gpg.d/wibu-packages-maintainers.gpg",
+    "/etc/apt/sources.list.d/voraus.list",
+    "/etc/apt/sources.list.d/voraus.sources",
+    "/etc/apt/trusted.gpg.d/vorausrobotik.gpg",
+]
+
 
 def firewall_enabled(host: Host) -> bool:
     return bool(host.ansible.get_variables()["wibu_packages_firewall"])
@@ -46,11 +60,28 @@ def test_codemeter_listens(host: Host) -> None:
     assert host.socket("tcp://22350").is_listening
 
 
-def test_old_repo_and_key_removed(host: Host) -> None:
-    # The role must clean up the rotated-out wibu repo and GPG key, including on
-    # machines that were previously provisioned with them.
-    assert not host.file("/usr/share/keyrings/wibu-package-maintainers.gpg").exists
-    assert not host.file("/etc/apt/sources.list.d/voraus-wibu.list").exists
+@pytest.mark.parametrize("path", LEGACY_APT_PATHS)
+def test_legacy_sources_and_keys_removed(path: str, host: Host) -> None:
+    # The role must clean up the rotated-out repositories and GPG keys, including on machines that
+    # were previously provisioned with them.
+    assert not host.file(path).exists, f"'{path}' is still present"
+
+
+def test_deb822_source_configured(host: Host) -> None:
+    source = host.file(APT_SOURCE_PATH)
+    assert source.exists, f"'{APT_SOURCE_PATH}' was not written"
+
+    content = source.content_string
+    assert "Types: deb" in content
+    assert "URIs: https://voraus.jfrog.io/artifactory/debian" in content
+    assert f"Signed-By: {APT_KEYRING_PATH}" in content
+
+
+def test_signing_key_is_repository_scoped(host: Host) -> None:
+    # The key must live in a keyring referenced by `Signed-By`, not in `/etc/apt/trusted.gpg.d`,
+    # from where apt would trust it for every configured repository.
+    assert host.file(APT_KEYRING_PATH).exists, f"'{APT_KEYRING_PATH}' is missing"
+    assert host.run("apt-get update").rc == 0
 
 
 def test_firewall_rules_loaded(host: Host) -> None:

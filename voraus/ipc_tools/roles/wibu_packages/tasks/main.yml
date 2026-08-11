@@ -1,26 +1,29 @@
 ---
+# The cleanup runs first, before anything touches apt: when two source entries describe the same
+# repository with a different `Signed-By`, apt refuses to read its source list as a whole and every
+# apt operation fails. A host that ended up in that state - for example because an older revision of
+# this role ran over it again and re-added its one-line source - can only be repaired by removing
+# the offending files, which this task does through `ansible.builtin.file` alone.
+- name: Clean up legacy wibu apt sources and GPG keys
+  ansible.builtin.include_tasks: cleanup_old_repo.yml
+
 - name: Install apt dependencies
   ansible.builtin.apt:
     update_cache: true
     pkg:
-      - gnupg2
-      - curl
+      # Required by `ansible.builtin.deb822_repository`
+      - python3-debian
     state: present
-
-- name: Clean up old wibu apt repo and GPG key
-  ansible.builtin.include_tasks: cleanup_old_repo.yml
-
-- name: Download and dearmor voraus GPG key
-  ansible.builtin.shell: |
-    set -o pipefail
-    curl -s --compressed https://voraus.jfrog.io/ui/api/v1/ui/security/keyPairs/voraus-gpg/public | \
-    gpg --dearmor -o /etc/apt/trusted.gpg.d/vorausrobotik.gpg
-  args:
-    executable: /bin/bash
-    creates: /etc/apt/trusted.gpg.d/vorausrobotik.gpg
 
 - name: Add voraus packages apt repo
   ansible.builtin.include_tasks: add_voraus_repo.yml
+
+# The apt cache is refreshed here rather than through a handler, because the packages are installed
+# within this role and would otherwise be resolved against a stale cache.
+- name: Update apt cache after adding the apt source # noqa: no-handler
+  ansible.builtin.apt:
+    update_cache: true
+  when: wibu_packages_repo is changed
 
 - name: Include package specific tasks
   ansible.builtin.include_tasks: 'install_{{ package_mapping[item.key] }}.yml'

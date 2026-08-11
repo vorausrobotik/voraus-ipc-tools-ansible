@@ -2,34 +2,79 @@
 - name: Import shared prepare playbook
   ansible.builtin.import_playbook: ../shared/prepare.yml
 
-- name: Provision old wibu apt repo and GPG key
+# Reproduces the state of a host that was provisioned by an earlier revision of this role, or by
+# following the pre-Artifactory instructions of https://github.com/vorausrobotik/wibu-packages, so
+# that the migration to the deb822 source and the repository scoped keyring is covered by the tests.
+- name: Provision legacy wibu apt sources and GPG keys
   hosts: all
   become: true
 
   tasks:
-    - name: Install dependencies for old repo provisioning
-      ansible.builtin.apt:
-        pkg:
-          - gnupg2
-          - curl
-        state: present
-        update_cache: true
+    - name: Provision the legacy apt sources and GPG keys
       when: wibu_packages_provision_old_repo | default(false)
+      block:
+        - name: Install dependencies for the legacy repo provisioning
+          ansible.builtin.apt:
+            pkg:
+              - gnupg2
+              - curl
+            state: present
+            update_cache: true
 
-    - name: Download and dearmor old wibu GPG key
-      ansible.builtin.shell: |
-        set -o pipefail
-        curl -s --compressed https://wibu-packages.vorausrobotik.com/ubuntu/wibu-packages-maintainers.gpg | \
-        gpg --dearmor -o /usr/share/keyrings/wibu-package-maintainers.gpg
-      args:
-        executable: /bin/bash
-        creates: /usr/share/keyrings/wibu-package-maintainers.gpg
-      when: wibu_packages_provision_old_repo | default(false)
+        - name: Download and dearmor the retired wibu maintainers key
+          ansible.builtin.shell: |
+            set -o pipefail
+            curl -s --compressed https://wibu-packages.vorausrobotik.com/ubuntu/wibu-packages-maintainers.gpg | \
+            gpg --dearmor -o {{ item }}
+          args:
+            executable: /bin/bash
+            creates: '{{ item }}'
+          loop:
+            # Where earlier revisions of this role placed the key
+            - /usr/share/keyrings/wibu-package-maintainers.gpg
+            # Where the upstream README told users to place it
+            - /etc/apt/trusted.gpg.d/wibu-packages-maintainers.gpg
 
-    - name: Add old wibu apt repo
-      ansible.builtin.apt_repository:
-        repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.gpg] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
-        filename: voraus-wibu
-        state: present
-        update_cache: true
-      when: wibu_packages_provision_old_repo | default(false)
+        - name: Add the retired wibu apt repo
+          ansible.builtin.apt_repository:
+            repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/wibu-package-maintainers.gpg] https://wibu-packages.vorausrobotik.com/ubuntu/ ./'
+            filename: voraus-wibu
+            state: present
+            update_cache: false
+
+        - name: Download and dearmor the Artifactory key as a globally trusted one
+          ansible.builtin.shell: |
+            set -o pipefail
+            curl -s --compressed https://voraus.jfrog.io/ui/api/v1/ui/security/keyPairs/voraus-gpg/public | \
+            gpg --dearmor -o /etc/apt/trusted.gpg.d/vorausrobotik.gpg
+          args:
+            executable: /bin/bash
+            creates: /etc/apt/trusted.gpg.d/vorausrobotik.gpg
+
+        # Both Artifactory sources are seeded, because a host can carry both: the one-line source
+        # was written while it still ran Debian 12, the deb822 one after it had been upgraded to
+        # Debian 13, and the role never removed the former. They name the same key, so apt reads
+        # them without a `Signed-By` conflict.
+        - name: Add the one-line Artifactory apt source
+          ansible.builtin.apt_repository:
+            repo: 'deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/vorausrobotik.gpg] https://voraus.jfrog.io/artifactory/debian stable main'
+            filename: voraus
+            state: present
+            update_cache: false
+
+        - name: Add the deb822 Artifactory apt source written by the previous role revision
+          ansible.builtin.copy:
+            dest: /etc/apt/sources.list.d/voraus.sources
+            mode: '0644'
+            content: |
+              X-Repolib-Name: voraus
+              Types: deb
+              URIs: https://voraus.jfrog.io/artifactory/debian
+              Suites: stable
+              Components: main
+              Architectures: amd64
+              Signed-By: /etc/apt/trusted.gpg.d/vorausrobotik.gpg
+
+        - name: Update the apt cache with the legacy sources in place
+          ansible.builtin.apt:
+            update_cache: true
