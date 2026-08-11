@@ -16,7 +16,10 @@ RemainAfterExit=yes
 StandardInput=null
 ExecStart=/usr/sbin/nft -f {{ wibu_packages_firewall_config_path }}
 ExecReload=/usr/sbin/nft -f {{ wibu_packages_firewall_config_path }}
-ExecStop=/usr/sbin/nft destroy table inet {{ wibu_packages_firewall_table_name }}
+# Declaring the table first makes the removal succeed even if the rules were never loaded, without
+# relying on `destroy table`, which requires nftables >= 1.0.6 and a kernel >= 6.3
+ExecStop=/usr/sbin/nft add table inet {{ wibu_packages_firewall_table_name }}
+ExecStop=/usr/sbin/nft delete table inet {{ wibu_packages_firewall_table_name }}
 
 [Install]
 WantedBy=sysinit.target
