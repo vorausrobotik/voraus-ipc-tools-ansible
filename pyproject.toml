@@ -30,7 +30,7 @@ dependencies = [
     "importlib-metadata",
     # End template-managed dependencies
     # Add additional runtime dependencies below this line
-    "ansible==14.2.0",
+    "ansible==14.3.0",
     "ansible-compat==26.6.0",
     "ansible-dev-tools==26.7.2",
 ]
@@ -79,24 +79,24 @@ build = [
 # template updates.                                       #
 ###########################################################
 
-tox = ["tox==4.58.0", "tox-uv~=1.28"]
+tox = ["tox==4.59.0", "tox-uv~=1.28"]
 lint-template = [
     "isort==8.0.1",
     "black==26.5.1",
     "mypy==2.3.0",
-    "pylint==4.0.6",
+    "pylint==4.0.7",
     "pytest==9.1.1",
     "doc8==2.0.0",
     "types-docutils",
     "types-setuptools",
     "jinja2==3.1.6",
-    "ruff==0.16.1",
+    "ruff==0.16.2",
 ]
 test-template = [
     "pytest==9.1.1",
     "pytest-randomly==4.1.0",
     "pytest-cov==7.1.0",
-    "coverage[toml]==7.15.3",
+    "coverage[toml]==7.15.4",
 ]
 doc-template = [
     "sphinx==9.1.0",
