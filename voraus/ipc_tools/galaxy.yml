@@ -9,7 +9,7 @@ name: ipc_tools
 
 # The version of the collection. Must be compatible with semantic versioning. Bumped by
 # release-please when the release pull request is merged, see `release-please-config.json`.
-version: 1.2.0 # x-release-please-version
+version: 1.3.0 # x-release-please-version
 
 readme: README.md
 
