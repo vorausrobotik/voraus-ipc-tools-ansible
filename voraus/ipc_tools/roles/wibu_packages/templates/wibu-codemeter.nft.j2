@@ -8,8 +8,12 @@
 # `accept` only ends the evaluation of *this* chain. Docker's and any other ruleset therefore
 # stay untouched, and their `accept` rules cannot re-open the ports.
 
-# Replace a previously loaded revision, so that this file can be re-applied as a whole
-destroy table inet {{ wibu_packages_firewall_table_name }}
+# Replace a previously loaded revision, so that this file can be re-applied as a whole. Declaring
+# the table before deleting it is a no-op if it already exists and creates it otherwise, so the
+# `delete` also succeeds on a host that has never loaded these rules. `destroy table` would express
+# the same intent in one statement, but it requires nftables >= 1.0.6 and a kernel >= 6.3.
+table inet {{ wibu_packages_firewall_table_name }} {}
+delete table inet {{ wibu_packages_firewall_table_name }}
 
 table inet {{ wibu_packages_firewall_table_name }} {
   chain input {
