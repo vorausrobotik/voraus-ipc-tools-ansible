@@ -9,6 +9,14 @@ galaxy_info:
 
   min_ansible_version: '2.1'
 
+  # The apt source is written in the deb822 format and references an ASCII armored keyring, which
+  # requires apt >= 1.4. Both are well covered by the releases listed here.
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+        - trixie
+
   galaxy_tags: []
 
 dependencies: []
