@@ -30,9 +30,9 @@ dependencies = [
     "importlib-metadata",
     # End template-managed dependencies
     # Add additional runtime dependencies below this line
-    "ansible==14.3.0",
-    "ansible-compat==26.6.0",
-    "ansible-dev-tools==26.7.2",
+    "ansible==14.3.1",
+    "ansible-compat==26.8.0",
+    "ansible-dev-tools==26.8.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -59,7 +59,7 @@ lint = [
 test = [
     "voraus-ipc-tools-ansible[test-template]",
     # Add additional testing dependencies here
-    "molecule==26.6.0",
+    "molecule==26.8.0",
     "molecule-plugins[vagrant]==26.7.15",
     "pytest-testinfra==10.2.2",
 ]
@@ -79,18 +79,18 @@ build = [
 # template updates.                                       #
 ###########################################################
 
-tox = ["tox==4.59.0", "tox-uv~=1.28"]
+tox = ["tox==4.60.0", "tox-uv~=1.28"]
 lint-template = [
     "isort==8.0.1",
     "black==26.5.1",
-    "mypy==2.3.0",
+    "mypy==2.3.1",
     "pylint==4.0.7",
     "pytest==9.1.1",
     "doc8==2.0.0",
     "types-docutils",
     "types-setuptools",
     "jinja2==3.1.6",
-    "ruff==0.16.2",
+    "ruff==0.16.4",
 ]
 test-template = [
     "pytest==9.1.1",
