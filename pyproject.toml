@@ -30,9 +30,9 @@ dependencies = [
     "importlib-metadata",
     # End template-managed dependencies
     # Add additional runtime dependencies below this line
-    "ansible==14.3.0",
-    "ansible-compat==26.6.0",
-    "ansible-dev-tools==26.7.2",
+    "ansible==14.3.1",
+    "ansible-compat==26.8.0",
+    "ansible-dev-tools==26.8.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -59,7 +59,7 @@ lint = [
 test = [
     "voraus-ipc-tools-ansible[test-template]",
     # Add additional testing dependencies here
-    "molecule==26.6.0",
+    "molecule==26.8.0",
     "molecule-plugins[vagrant]==26.7.15",
     "pytest-testinfra==10.2.2",
 ]
@@ -79,36 +79,36 @@ build = [
 # template updates.                                       #
 ###########################################################
 
-tox = ["tox==4.59.0", "tox-uv~=1.28"]
+tox = ["tox==4.61.2", "tox-uv~=1.28"]
 lint-template = [
-    "isort==8.0.1",
+    "isort==9.0.1",
     "black==26.5.1",
-    "mypy==2.3.0",
-    "pylint==4.0.7",
+    "mypy==2.3.1",
+    "pylint==4.0.8",
     "pytest==9.1.1",
     "doc8==2.0.0",
     "types-docutils",
     "types-setuptools",
     "jinja2==3.1.6",
-    "ruff==0.16.2",
+    "ruff==0.16.6",
 ]
 test-template = [
     "pytest==9.1.1",
-    "pytest-randomly==4.1.0",
+    "pytest-randomly==5.0.0",
     "pytest-cov==7.1.0",
-    "coverage[toml]==7.15.4",
+    "coverage[toml]==7.16.0",
 ]
 doc-template = [
     "sphinx==9.1.0",
     "sphinxawesome-theme==6.0.5",
     "sphinx-selective-exclude==1.0.3",
-    "sphinx-autodoc-typehints==3.13.2",
+    "sphinx-autodoc-typehints==3.13.5",
     "pip-licenses==5.5.5",
     "jinja2==3.1.6",
     "snowballstemmer==3.1.1",
 ]
 
-build-template = ["build[virtualenv]==1.5.1"]
+build-template = ["build[virtualenv]==1.6.0"]
 
 ########################################
 # End of template-managed dependencies #
