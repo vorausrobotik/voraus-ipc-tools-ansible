@@ -57,6 +57,11 @@ provisioner:
     side_effect: ../shared/side_effect.yml
 verifier:
   name: testinfra
+  # Paths are relative to this scenario's `tests` directory
+  additional_files_or_dirs:
+    - ../../core_isolation/tests/test_core_isolation.py
+    - ../../realtime_kernel/tests/test_realtime_kernel.py
+    - ../../wibu_packages/tests/test_wibu_packages.py
   options:
     # https://github.com/pytest-dev/pytest-testinfra/issues/58#issuecomment-1839460327
     # pytest-ansible conflicts with --connection

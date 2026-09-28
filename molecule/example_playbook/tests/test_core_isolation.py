@@ -1,1 +1,0 @@
-../../core_isolation/tests/test_core_isolation.py
