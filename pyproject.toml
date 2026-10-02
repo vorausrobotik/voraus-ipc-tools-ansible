@@ -52,7 +52,7 @@ dev = [
 lint = [
     "voraus-ipc-tools-ansible[lint-template]",
     # Add additional linting dependencies here
-    "pylint-per-file-ignores==3.2.1",
+    "pylint-per-file-ignores==4.0.0",
     "pytest-testinfra",
     "myst-parser==5.1.0",
 ]
@@ -79,18 +79,18 @@ build = [
 # template updates.                                       #
 ###########################################################
 
-tox = ["tox==4.64.4", "tox-uv~=1.28"]
+tox = ["tox==4.64.7", "tox-uv~=1.28"]
 lint-template = [
-    "isort==9.0.1",
+    "isort==9.0.2",
     "black==26.5.1",
-    "mypy==2.3.1",
-    "pylint==4.0.9",
+    "mypy==2.4.0",
+    "pylint==4.1.2",
     "pytest==9.1.1",
     "doc8==2.0.0",
     "types-docutils",
     "types-setuptools",
     "jinja2==3.1.6",
-    "ruff==0.16.9",
+    "ruff==0.16.10",
 ]
 test-template = [
     "pytest==9.1.1",
@@ -102,7 +102,7 @@ doc-template = [
     "sphinx==9.1.0",
     "sphinxawesome-theme==6.0.5",
     "sphinx-selective-exclude==1.0.3",
-    "sphinx-autodoc-typehints==3.13.7",
+    "sphinx-autodoc-typehints==3.13.8",
     "pip-licenses==5.5.5",
     "jinja2==3.1.6",
     "snowballstemmer==3.1.1",
