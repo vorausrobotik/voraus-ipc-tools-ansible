@@ -1,5 +1,44 @@
 # Changelog
 
+## [1.3.0](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/compare/1.2.0...1.3.0) (2026-10-09)
+
+
+### Features
+
+* **wibu_packages:** Use the deb822 apt sources format everywhere ([1889d51](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/1889d5114b217105868a44b022911ed56fff0062))
+
+
+### Bug Fixes
+
+* **test:** Share molecule tests through `additional_files_or_dirs` ([3e06bca](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/3e06bca58ee7e6d67f13016332200de71d14f1e8))
+* **wibu_packages:** Replace `destroy table` with a portable nftables idiom ([73edab2](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/73edab20226e5bf7498f75d862903cc8893f86fb))
+
+
+### Documentation
+
+* **wibu_packages:** Declare the supported platforms ([a86c4c5](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/a86c4c585b2415c9f64fc62dbdcca4fb7f5f987a))
+
+
+### Build System
+
+* **deps:** Lock file maintenance ([2ba8340](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/2ba834004c98419758bbc1163052333d6356ca21))
+* **deps:** Lock file maintenance ([976ae50](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/976ae500fedbc34613339aeee222870167caf868))
+* **deps:** Lock file maintenance ([ab4d41d](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/ab4d41df3af28c6758ba59e539276768276ab694))
+* **deps:** Update dependency community.general to &gt;=13.5,&lt;13.6 ([c0b501f](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/c0b501fa9cf0cafb677b64b45567f6fd39341b6a))
+* **deps:** Update dependency community.general to v13 ([8a0ae47](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/8a0ae47c8dfdccc606a81b75f095841fec5ef1db))
+* **deps:** Update GitHub Actions ([3a68888](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/3a688881adce510207707020e15b97ba29684e70))
+* **deps:** Update GitHub Actions ([df0119c](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/df0119c84878b16f8a43d4a95ff4e4a42431cdcc))
+* **deps:** Update Python dependencies ([4ce7a4c](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/4ce7a4c429e60193c757144cdbe169b92c0ebebc))
+* **deps:** Update Python dependencies ([89bdf07](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/89bdf07a55e06b3b7601d1a193396d683101ba42))
+* **deps:** Update Python dependencies ([2eaa2e2](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/2eaa2e2ea2e3312d92e5becec238b08c1e8d0e16))
+* **renovate:** Track wibu package versions ([ab2ce9f](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/ab2ce9ffd624dbb78b48b6246e042517f83a18cd))
+
+
+### Miscellaneous Chores
+
+* **deps:** Bump urllib3 from 2.7.0 to 2.8.0 ([5ecb090](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/5ecb09030a3c811e69561cf26495a1aed02a004f))
+* **deps:** Bump virtualenv from 21.7.9 to 21.7.13 ([d1a4510](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/d1a4510e229f03567d6d05308caca6fbbd144fe2))
+
 ## [1.2.0](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/compare/1.1.0...1.2.0) (2026-08-04)
 
 
