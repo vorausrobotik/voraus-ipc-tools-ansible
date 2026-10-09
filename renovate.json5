@@ -30,12 +30,28 @@
       groupSlug: 'ansible-galaxy',
     },
     {
+      matchManagers: ['custom.regex'],
+      groupName: 'wibu packages',
+      groupSlug: 'wibu-packages',
+    },
+    {
       // The interpreter is pinned to 3.13 via `requires-python` and `.python-version`.
       // Renovate treats `requires-python` as a bumpable dependency and would propose
       // `==3.14.*`, silently undoing the pin. Interpreter changes stay manual.
       matchManagers: ['pep621'],
       matchDepTypes: ['requires-python'],
       enabled: false,
+    },
+  ],
+
+  // Versions of the wibu packages in the voraus apt repo. Each package in
+  // `wibu_packages_install` carries a `# renovate: datasource=deb` comment.
+  customManagers: [
+    {
+      customType: 'regex',
+      managerFilePatterns: ['/^voraus/ipc_tools/roles/wibu_packages/defaults/main\\.yml$/'],
+      matchStrings: ['#\\s*renovate: datasource=(?<datasource>deb)\\s+(?<depName>[\\w.+-]+): (?<currentValue>\\S+)'],
+      registryUrlTemplate: 'https://voraus.jfrog.io/artifactory/debian?suite=stable&components=main&binaryArch=amd64',
     },
   ],
 

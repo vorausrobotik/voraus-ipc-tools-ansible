@@ -1,6 +1,8 @@
 ---
 wibu_packages_install:
+  # renovate: datasource=deb
   codemeter-lite: 9.10.8166.500
+  # renovate: datasource=deb
   axprotector: 11.80.8031.500
 
 wibu_packages_allow_downgrades: true
