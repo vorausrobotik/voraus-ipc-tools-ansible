@@ -79,10 +79,10 @@ build = [
 # template updates.                                       #
 ###########################################################
 
-tox = ["tox==4.64.10", "tox-uv~=1.28"]
+tox = ["tox==4.65.2", "tox-uv~=1.28"]
 lint-template = [
     "isort==9.0.2",
-    "black==26.10.0",
+    "black==26.10.1",
     "mypy==2.4.0",
     "pylint==4.1.2",
     "pytest==9.1.1",
@@ -90,7 +90,7 @@ lint-template = [
     "types-docutils",
     "types-setuptools",
     "jinja2==3.1.6",
-    "ruff==0.16.10",
+    "ruff==0.17.0",
 ]
 test-template = [
     "pytest==9.1.1",
