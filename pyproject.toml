@@ -54,6 +54,7 @@ lint = [
     # Add additional linting dependencies here
     "pylint-per-file-ignores==4.0.0",
     "pytest-testinfra",
+    "types-PyYAML",
     "myst-parser==5.1.0",
 ]
 test = [
