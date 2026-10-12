@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = "==3.13.*"
 
 [[package]]
@@ -1613,6 +1613,15 @@ wheels = [
 ]
 
 [[package]]
+name = "types-pyyaml"
+version = "6.0.12.20260906"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/90/6e/abec85b9013db5b934b0280a6dd104904d84f7bcbaab2e2f3def87ac7463/types_pyyaml-6.0.12.20260906.tar.gz", hash = "sha256:f59c1cc05010b833d2d72287bbaa72610106b28d42d89a907313117faba85212", size = 18649, upload-time = "2026-09-06T06:35:35.362Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/15/c0/fc0644b7ddcfb969e95845837143cb5173ddd6e06ee4ba5fc493cd9329b7/types_pyyaml-6.0.12.20260906-py3-none-any.whl", hash = "sha256:bca893ff0d51df5c9053137d5d0e6ccd36e939a196356f1d5c16372422f5137b", size = 21282, upload-time = "2026-09-06T06:35:34.372Z" },
+]
+
+[[package]]
 name = "types-setuptools"
 version = "84.0.0.20261006"
 source = { registry = "https://pypi.org/simple" }
@@ -1735,6 +1744,7 @@ dev = [
     { name = "tox" },
     { name = "tox-uv" },
     { name = "types-docutils" },
+    { name = "types-pyyaml" },
     { name = "types-setuptools" },
 ]
 doc = [
@@ -1769,6 +1779,7 @@ lint = [
     { name = "pytest-testinfra" },
     { name = "ruff" },
     { name = "types-docutils" },
+    { name = "types-pyyaml" },
     { name = "types-setuptools" },
 ]
 lint-template = [
@@ -1839,6 +1850,7 @@ requires-dist = [
     { name = "tox", marker = "extra == 'tox'", specifier = "==4.64.10" },
     { name = "tox-uv", marker = "extra == 'tox'", specifier = "~=1.28" },
     { name = "types-docutils", marker = "extra == 'lint-template'" },
+    { name = "types-pyyaml", marker = "extra == 'lint'" },
     { name = "types-setuptools", marker = "extra == 'lint-template'" },
     { name = "voraus-ipc-tools-ansible", extras = ["build"], marker = "extra == 'dev'" },
     { name = "voraus-ipc-tools-ansible", extras = ["build-template"], marker = "extra == 'build'" },

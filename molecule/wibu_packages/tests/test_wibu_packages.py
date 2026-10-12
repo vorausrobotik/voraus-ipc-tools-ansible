@@ -1,6 +1,8 @@
+from pathlib import Path
 from typing import Any
 
 import pytest
+import yaml
 from testinfra.host import Host
 from testinfra.modules.package import Package
 
@@ -12,6 +14,10 @@ FIREWALL_SERVICE = "wibu-codemeter-firewall"
 FIREWALL_UNIT_PATH = f"/etc/systemd/system/{FIREWALL_SERVICE}.service"
 # The verifier runs the tests through sudo, `nft` is not in the connecting user's PATH though
 NFT = "/usr/sbin/nft"
+
+ROLE_DEFAULTS_PATH = Path(__file__).parents[3] / "voraus/ipc_tools/roles/wibu_packages/defaults/main.yml"
+# Renovate bumps the versions in the role defaults, so the test reads its expectation from there
+EXPECTED_PACKAGES = yaml.safe_load(ROLE_DEFAULTS_PATH.read_text(encoding="utf-8"))["wibu_packages_install"]
 
 APT_SOURCE_PATH = "/etc/apt/sources.list.d/vorausrobotik.sources"
 # The Artifactory key is served ASCII armored, which `deb822_repository` stores as `.asc`
@@ -45,7 +51,7 @@ def probe_can_connect(host: Host, probe: dict[str, Any], port: int) -> bool:
 
 @pytest.mark.parametrize(
     ("package_name", "package_version"),
-    [("codemeter-lite", "9.10.8166.500"), ("axprotector", "11.80.8031.500")],
+    EXPECTED_PACKAGES.items(),
 )
 def test_packages_installed(package_name: str, package_version: str, host: Host) -> None:
     package: Package = host.package(package_name)
