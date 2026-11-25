@@ -35,11 +35,12 @@
       groupSlug: 'wibu-packages',
     },
     {
-      // The interpreter is pinned to 3.13 via `requires-python` and `.python-version`.
-      // Renovate treats `requires-python` as a bumpable dependency and would propose
-      // `==3.14.*`, silently undoing the pin. Interpreter changes stay manual.
-      matchManagers: ['pep621'],
-      matchDepTypes: ['requires-python'],
+      // The interpreter is pinned to 3.13 via `requires-python` (pep621) and
+      // `.python-version` (pyenv). Renovate would bump each file on its own, and the
+      // two pins would then disagree, which fails every CI job. Interpreter changes
+      // stay manual and touch both files together.
+      matchManagers: ['pep621', 'pyenv'],
+      matchDepNames: ['python'],
       enabled: false,
     },
   ],
