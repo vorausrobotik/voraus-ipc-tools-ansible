@@ -70,6 +70,7 @@ verifier:
     # pytest-ansible conflicts with --connection
     p: 'no:pytest-ansible'
 
-    # avoid loading global pyproject.toml options, so we don't
-    # load the setting that says "disable testinfra"
-    c: '.'
+    # The scenarios live in the package `molecule`. With the `--import-mode=append`
+    # from `pyproject.toml`, that name resolves to the installed Molecule package
+    # instead, and test collection fails.
+    import-mode: prepend
