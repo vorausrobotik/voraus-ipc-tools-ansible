@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.3.1](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/compare/1.3.0...1.3.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **grub_config:** Skip `grub-common.service` while `/boot/grub` is read-only ([97bfa10](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/97bfa10b38c94db0f76a0ff0cd0fdc9bbf3a03ac))
+
+
+### Tests
+
+* **molecule:** Replace `-c .` with `--import-mode prepend` for testinfra ([b807af0](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/b807af0f553d8ff337b2a182b41a5b8cad5fc733))
+
+
+### Build System
+
+* **deps:** Lock file maintenance ([db64ae0](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/db64ae0ec378595bf404baf97260c2cd5d4ce7e1))
+* **deps:** Update Ansible Galaxy dependencies ([ee8b227](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/ee8b227c8a6bb199d20808fdd2b6f554020d5ae2))
+* **deps:** Update GitHub Actions ([c04d2f9](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/c04d2f946c6826dc6bb7cd906eae9e9d44aaf27c))
+* **deps:** Update Python dependencies ([b055cf3](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/b055cf3307865320e0ddb31f734e12726e92fd68))
+* **renovate:** Keep `.python-version` pinned like `requires-python` ([181f0e0](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/181f0e0cd4aa1ae621570daa6334f4ce5a2fc16b))
+
+
+### Continuous Integration
+
+* **test:** Drop the `qemu-kvm` package that Ubuntu 26.04 no longer ships ([7fb9b73](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/7fb9b7317a4ad92a413399b289721e0159a601fc))
+* **test:** Replace `apt-key` with a `signed-by` keyring for the HashiCorp repository ([aa79ea2](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/aa79ea20418a10b0c1d14178caf6290d980cd6ab))
+
 ## [1.3.0](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/compare/1.2.0...1.3.0) (2026-10-12)
 
 
