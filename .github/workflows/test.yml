@@ -60,7 +60,6 @@ jobs:
             libvirt-clients \
             vagrant \
             qemu-system \
-            qemu-kvm \
             libvirt-daemon-system
           sudo vagrant plugin install vagrant-libvirt
 
