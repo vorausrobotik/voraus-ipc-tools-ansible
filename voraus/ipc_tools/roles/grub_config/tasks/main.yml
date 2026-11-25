@@ -2,6 +2,33 @@
 - name: Gather facts and set variables
   ansible.builtin.include_tasks: set_variables.yml
 
+- name: Gather service facts
+  ansible.builtin.service_facts:
+
+- name: Skip grub-common.service while /boot/grub is read-only
+  when: "'grub-common.service' in ansible_facts.services"
+  block:
+    - name: Create the drop-in directory for grub-common.service
+      ansible.builtin.file:
+        path: /etc/systemd/system/grub-common.service.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Install the drop-in that skips grub-common.service on a read-only /boot/grub
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/grub-common.service.d/boot-read-only.conf
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          # /boot is mounted read-only so a power failure cannot corrupt it. GRUB
+          # cannot write grubenv on it either, so there is no recordfail flag to clear.
+          [Unit]
+          ConditionPathIsReadWrite=/boot/grub
+      notify: Reload Systemd Daemon
+
 - name: Adding kernel parameter to GRUB config
   when: grub_config_resulting_params != grub_config_current_params
   ansible.builtin.replace:
