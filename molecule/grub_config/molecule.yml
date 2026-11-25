@@ -34,9 +34,11 @@ provisioner:
       all:
         role_name: voraus.ipc_tools.grub_config
     host_vars:
-      # No initial values, no values to add. Should not change anything
+      # No initial values, no values to add. Should not change anything.
+      # Mounts /boot/grub read-only like the /boot of the IPCs.
       grub-config-default:
         grub_config_initial_test_values: ''
+        grub_config_test_boot_read_only: true
         expected_cmdline_params: {}
       # Should override existing key=value parameter
       grub-config-existing-nomodeset-override-key-value:

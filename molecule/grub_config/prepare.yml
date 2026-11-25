@@ -25,3 +25,13 @@
     - name: Reboot machine
       when: grub_config_molecule_prepare.changed # noqa no-handler
       ansible.builtin.reboot:
+
+    # A bind mount survives until the next reboot, so it has to come after the reboot above
+    - name: Mount /boot/grub read-only
+      when: grub_config_test_boot_read_only | default(false)
+      ansible.posix.mount:
+        path: /boot/grub
+        src: /boot/grub
+        fstype: none
+        opts: bind,ro
+        state: ephemeral
