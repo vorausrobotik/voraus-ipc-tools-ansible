@@ -1,0 +1,15 @@
+---
+- name: Check whether /boot is a read-only mount
+  # Returns 0 if /boot is its own mount and read-only, 1 otherwise.
+  ansible.builtin.command: findmnt --mountpoint /boot --options ro
+  register: boot_mount_read_only
+  failed_when: boot_mount_read_only.rc > 1
+  changed_when: false
+
+- name: Remount /boot read-write
+  when: boot_mount_read_only.rc == 0
+  ansible.posix.mount:
+    path: /boot
+    state: remounted
+    fstype: auto
+    opts: rw

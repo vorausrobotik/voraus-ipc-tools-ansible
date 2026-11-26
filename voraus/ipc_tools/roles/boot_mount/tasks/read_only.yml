@@ -1,0 +1,8 @@
+---
+- name: Remount /boot read-only again
+  when: (boot_mount_read_only.rc | default(1)) == 0
+  ansible.posix.mount:
+    path: /boot
+    state: remounted
+    fstype: auto
+    opts: ro
