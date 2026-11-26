@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: boot_mount
+  namespace: voraus
+  author: Jan-Frederik Schmidt
+  description: >
+    Makes a read-only /boot writable for a change and restores the read-only mount afterwards.
+  company: voraus robotik GmbH
+  license: MIT
+
+  min_ansible_version: '2.1'
+
+  galaxy_tags: []
+
+dependencies: []

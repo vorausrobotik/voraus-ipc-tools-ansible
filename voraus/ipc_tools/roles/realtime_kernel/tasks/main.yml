@@ -32,25 +32,10 @@
   notify:
     - Reboot Machine
   block:
-    - name: Check if /boot is mounted in read-only mode
-      # Returns 0 if /boot is mounted separately and in read-only mode, 1 otherwise.
-      ansible.builtin.shell:
-        cmd: |
-          set -o pipefail
-          grep "[[:space:]]ro[[:space:],]" /proc/mounts | grep /boot
-        executable: /bin/bash
-
-      register: realtime_kernel_grep_boot
-      failed_when: realtime_kernel_grep_boot.rc > 1
-      changed_when: false
-
-    - name: Remount /boot partition in read-write mode if necessary
-      ansible.posix.mount:
-        path: /boot
-        state: remounted
-        fstype: auto
-        opts: rw
-      when: realtime_kernel_grep_boot.rc == 0
+    - name: Make /boot writable
+      ansible.builtin.include_role:
+        name: voraus.ipc_tools.boot_mount
+        tasks_from: read_write
 
     - name: Install realtime kernel and header packages
       ansible.builtin.apt:
@@ -90,3 +75,8 @@
         or
         realtime_kernel_kernel_params_update.changed
       ansible.builtin.command: update-grub2
+
+    - name: Make /boot read-only again
+      ansible.builtin.include_role:
+        name: voraus.ipc_tools.boot_mount
+        tasks_from: read_only

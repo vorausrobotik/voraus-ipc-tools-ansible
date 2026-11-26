@@ -48,28 +48,18 @@
 - name: Re-generate kernel
   when: grub_config_write_params.changed # noqa no-handler
   block:
-    - name: Check if /boot is mounted in read-only mode
-      # Returns 0 if /boot is mounted separately and in read-only mode, 1 if not and 2 if there is a syntax error.
-      ansible.builtin.shell:
-        cmd: |
-          set -o pipefail
-          grep "[[:space:]]ro[[:space:],]" /proc/mounts | grep /boot
-        executable: /bin/bash
-
-      register: grub_config_grep_boot
-      failed_when: grub_config_grep_boot.rc > 1
-      changed_when: false # Do not count this task into the "changed" state
-
-    - name: Remount /boot partition in read-write mode if necessary
-      when: grub_config_grep_boot.rc == 0
-      ansible.posix.mount:
-        path: /boot
-        state: remounted
-        fstype: auto
-        opts: rw
+    - name: Make /boot writable
+      ansible.builtin.include_role:
+        name: voraus.ipc_tools.boot_mount
+        tasks_from: read_write
 
     - name: Update GRUB # noqa no-changed-when
       ansible.builtin.command: update-grub2
+
+    - name: Make /boot read-only again
+      ansible.builtin.include_role:
+        name: voraus.ipc_tools.boot_mount
+        tasks_from: read_only
 
     - name: Reboot system
       ansible.builtin.reboot:
