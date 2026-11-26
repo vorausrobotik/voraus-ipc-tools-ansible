@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: nic_naming
+  namespace: voraus
+  author: Jan-Frederik Schmidt
+  description: >
+    Keeps the path-based network interface names, such as enp3s0, when a BIOS update adds onboard indexes.
+  company: voraus robotik GmbH
+  license: MIT
+
+  min_ansible_version: '2.1'
+
+  galaxy_tags: []
+
+dependencies: []

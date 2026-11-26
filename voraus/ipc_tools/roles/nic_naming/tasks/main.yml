@@ -1,0 +1,40 @@
+---
+- name: Create the drop-in directory for the default link file
+  ansible.builtin.file:
+    path: /etc/systemd/network/99-default.link.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install the drop-in that leaves firmware-provided names out of the naming policy
+  ansible.builtin.copy:
+    dest: /etc/systemd/network/99-default.link.d/10-no-onboard-names.conf
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      # A BIOS update can add onboard indexes or slot numbers for the network
+      # interfaces. systemd then prefers names like eno1 over path names like
+      # enp3s0, and the network configuration no longer finds its interface.
+      [Link]
+      NamePolicy=keep kernel database path
+  register: nic_naming_drop_in
+
+# The initramfs names the interfaces before the root file system is mounted, and
+# the "keep" policy then keeps that name. Without a rebuild, the old policy still wins.
+- name: Rebuild the initramfs with the drop-in
+  when: nic_naming_drop_in.changed # noqa no-handler
+  block:
+    - name: Make /boot writable
+      ansible.builtin.include_role:
+        name: voraus.ipc_tools.boot_mount
+        tasks_from: read_write
+
+    - name: Update the initramfs # noqa no-changed-when
+      ansible.builtin.command: update-initramfs -u -k all
+
+    - name: Make /boot read-only again
+      ansible.builtin.include_role:
+        name: voraus.ipc_tools.boot_mount
+        tasks_from: read_only
