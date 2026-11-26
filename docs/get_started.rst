@@ -15,4 +15,5 @@ The collection currently contains the following roles, please refer to their ind
    roles/grub_config/README
    roles/realtime_kernel/README
    roles/core_isolation/README
+   roles/nic_naming/README
    roles/boot_mount/README

@@ -1,0 +1,51 @@
+---
+- name: Import shared prepare playbook
+  ansible.builtin.import_playbook: ../shared/prepare.yml
+
+- name: Put /boot on its own read-only file system
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Move /boot to a read-only loop device
+      when: nic_naming_test_boot_read_only | default(false)
+      block:
+        - name: Create the image file
+          ansible.builtin.command:
+            cmd: truncate --size 512M /var/lib/boot.img
+            creates: /var/lib/boot.img
+
+        - name: Create an ext2 file system like the one on the IPCs
+          community.general.filesystem:
+            dev: /var/lib/boot.img
+            fstype: ext2
+
+        - name: Mount the image at a staging directory
+          ansible.posix.mount:
+            path: /mnt/boot
+            src: /var/lib/boot.img
+            fstype: ext2
+            opts: loop
+            state: ephemeral
+
+        - name: Copy the content of /boot into the image # noqa no-changed-when
+          ansible.builtin.command: cp -a /boot/. /mnt/boot/
+
+        - name: Unmount the staging directory
+          ansible.posix.mount:
+            path: /mnt/boot
+            state: unmounted
+
+        # An ephemeral mount does not survive a reboot, and the role never reboots
+        - name: Mount the image at /boot
+          ansible.posix.mount:
+            path: /boot
+            src: /var/lib/boot.img
+            fstype: ext2
+            opts: loop
+            state: ephemeral
+
+        # Mounting with "ro" right away would make the loop device itself read-only,
+        # and no remount could make /boot writable again
+        - name: Remount /boot read-only # noqa command-instead-of-module no-changed-when
+          ansible.builtin.command: mount -o remount,ro /boot

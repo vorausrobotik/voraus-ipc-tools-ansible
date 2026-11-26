@@ -1,0 +1,48 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+platforms:
+  - name: nic-naming-default
+    box: cloud-image/debian-13
+    memory: 512
+    cpus: 1
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
+  - name: nic-naming-boot-read-only
+    box: cloud-image/debian-13
+    memory: 512
+    cpus: 1
+    networks:
+      - name: 'public_network'
+        type: 'dhcp'
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        role_name: voraus.ipc_tools.nic_naming
+    host_vars:
+      # Puts /boot on its own read-only file system like on the IPCs.
+      nic-naming-boot-read-only:
+        nic_naming_test_boot_read_only: true
+  env:
+    ANSIBLE_ROLES_PATH: ../../voraus/ipc_tools/roles/
+  playbooks:
+    prepare: prepare.yml
+    converge: ../shared/converge.yml
+verifier:
+  name: testinfra
+  options:
+    # https://github.com/pytest-dev/pytest-testinfra/issues/58#issuecomment-1839460327
+    # pytest-ansible conflicts with --connection
+    p: 'no:pytest-ansible'
+
+    # The scenarios live in the package `molecule`. With the `--import-mode=append`
+    # from `pyproject.toml`, that name resolves to the installed Molecule package
+    # instead, and test collection fails.
+    import-mode: prepend
