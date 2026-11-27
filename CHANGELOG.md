@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/compare/1.3.1...1.4.0) (2026-11-27)
+
+
+### Features
+
+* **boot_mount:** Share the read-only `/boot` remount between roles ([56deafc](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/56deafc2eb840b92a172ab49ab10371e205101b6))
+* **nic_naming:** Keep path-based interface names across BIOS updates ([6caf2d7](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/commit/6caf2d7936ffbe5c20fdbe7ede73f056daabf835))
+
 ## [1.3.1](https://github.com/vorausrobotik/voraus-ipc-tools-ansible/compare/1.3.0...1.3.1) (2026-11-25)
 
 
