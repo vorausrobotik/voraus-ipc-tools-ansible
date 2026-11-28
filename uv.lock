@@ -40,7 +40,7 @@ wheels = [
 
 [[package]]
 name = "ansible-compat"
-version = "26.11.0"
+version = "26.11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ansible-core" },
@@ -49,9 +49,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "subprocess-tee" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e8/b3/64652d98718d5a597a15c2eb95e55fd6935b1c4eeee316370e5a498a2a6e/ansible_compat-26.11.0.tar.gz", hash = "sha256:35cbe829e0b5a9acb85d34b8d5da2eb45acaf767f6651f90e0ab2f3a96a060bb", size = 295998, upload-time = "2026-11-05T08:41:46.716Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/58/4e/52311092d3168346557c31d1090225cc57dbe48ecc399c2e400da4c6065f/ansible_compat-26.11.1.tar.gz", hash = "sha256:d22e0a48d8d79e727b0f56db3573b02bde2189b5bfbef067230a34c0bcbff94a", size = 305831, upload-time = "2026-11-25T10:39:51.937Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/88/3e/696ba32885c888867214baba910cc07c13aa410884a04ff0892f9b744e3c/ansible_compat-26.11.0-py3-none-any.whl", hash = "sha256:c06a486b39ced440f9f6fb9a99583c73d9239c94ece822a27ea2242173462dda", size = 29027, upload-time = "2026-11-05T08:41:45.462Z" },
+    { url = "https://files.pythonhosted.org/packages/13/aa/eec431e7b5db6f86defb0acb6805d3101255c48c74637cf1bc1c6fd7aa86/ansible_compat-26.11.1-py3-none-any.whl", hash = "sha256:ed9717fde1705a58678c1503e46316a36f7392229c2444d2b2f1b6de12be9f25", size = 29025, upload-time = "2026-11-25T10:39:50.619Z" },
 ]
 
 [[package]]
@@ -100,7 +100,7 @@ wheels = [
 
 [[package]]
 name = "ansible-dev-tools"
-version = "26.11.0"
+version = "26.11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ansible-builder" },
@@ -115,9 +115,9 @@ dependencies = [
     { name = "setuptools" },
     { name = "tox-ansible" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cc/11/ade68391597e22a7ca537bc2e6c0909f9fe2e557d0da4edaa9136a8de0fb/ansible_dev_tools-26.11.0.tar.gz", hash = "sha256:8f1c9008550e667780c8499643fe7fa1d7326a7ce3b789ca04994a2c373ed923", size = 1068917, upload-time = "2026-11-05T09:11:20.226Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/c6/9544e36af945b555e7ee9d7f611e955f0464c01800b34f1e2595b2e77bfe/ansible_dev_tools-26.11.1.tar.gz", hash = "sha256:ee6387671a818e08a81fdf9769d0696fc15538441eb580ee7c9b16a2ffd9c9d8", size = 1069133, upload-time = "2026-11-25T12:01:10.664Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e3/5e/e53188a2c51d9b53d7379ab154bc94fb8d391902f7fad30e87f4c9f7e1c9/ansible_dev_tools-26.11.0-py3-none-any.whl", hash = "sha256:43e00f1cad5acb503207f2b0ac9114d73bd71d58468fd31f08e74ac6066aac12", size = 50513, upload-time = "2026-11-05T09:11:18.313Z" },
+    { url = "https://files.pythonhosted.org/packages/dc/db/987f9e416c3519abdd9f6363e58716023ccc90bc96f9c60930425a650ceb/ansible_dev_tools-26.11.1-py3-none-any.whl", hash = "sha256:43312ced15836a123256a90cb454ca796ca491ceaa984e66c467ecf8276c9585", size = 50512, upload-time = "2026-11-25T12:01:09.156Z" },
 ]
 
 [[package]]
@@ -823,7 +823,7 @@ wheels = [
 
 [[package]]
 name = "molecule"
-version = "26.11.0"
+version = "26.11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ansible-compat" },
@@ -838,9 +838,9 @@ dependencies = [
     { name = "rich" },
     { name = "wcmatch" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/29/40/126b3198761054132f2ee59f89224428e7a10208b395d985d012c8b15d37/molecule-26.11.0.tar.gz", hash = "sha256:706bb3d9a34e1531cfe1cda294974aad4ccba70af3ecb2d434266e0df73b0c09", size = 4734709, upload-time = "2026-11-05T08:52:49.341Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/19/d1/c9e0c748e2158dc58508188bc36ebbc88cdceacdfc7df77fe4b5a90b699c/molecule-26.11.1.tar.gz", hash = "sha256:34035f2852f1c0461539051ec1dd2398492c1e4f370ba507b81a781f322e4147", size = 4737608, upload-time = "2026-11-25T11:16:19.718Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/82/3a/8b36cd2a705f03e0cf506dbe3bf77c813588d41aae60e23e697fe821a484/molecule-26.11.0-py3-none-any.whl", hash = "sha256:5e48f66e97ce03ba1e9cfdf4a3667db499e960543c91bb62f530c6cd6337dd9b", size = 163665, upload-time = "2026-11-05T08:52:47.333Z" },
+    { url = "https://files.pythonhosted.org/packages/c4/74/b6975aaef1f5a7b0305e8ccc7c922cae07961faeff93fa0c730a8efa6d53/molecule-26.11.1-py3-none-any.whl", hash = "sha256:dcd147fb60bb66c060e0bf6a3eaa18f34433a18254a6f56f25ac254fb7980f64", size = 163664, upload-time = "2026-11-25T11:16:17.719Z" },
 ]
 
 [[package]]
@@ -1563,7 +1563,7 @@ wheels = [
 
 [[package]]
 name = "tox"
-version = "4.67.16"
+version = "4.67.17"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cachetools" },
@@ -1577,9 +1577,9 @@ dependencies = [
     { name = "tomli-w" },
     { name = "virtualenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ee/da/21b91a62f39b4a9f1a3dca15563d255143b1127416107c445ea9ebcc1289/tox-4.67.16.tar.gz", hash = "sha256:5aebaa21a648bb4c129724a2e7aeb4ce951f0d93a37f8709b630719fd5b78ab5", size = 479533, upload-time = "2026-11-23T21:05:28.349Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/74/60/ec895684edbd69456be42e699ee143163e1d8b053453cf0602171b5967e9/tox-4.67.17.tar.gz", hash = "sha256:8b170aa8d97cd3020f221fb876902aa70878b9fcbdbd1440ab3a33502b6c4d4e", size = 481139, upload-time = "2026-11-28T02:01:38.915Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/72/98/b3c2fa23a231fed77f6257df4b39291333b4b3bc3d7864f8591057aa544f/tox-4.67.16-py3-none-any.whl", hash = "sha256:daae3d97a74096cc4f18399dc09dd2bb767470336e02a0de3232a4d7bb546baa", size = 381081, upload-time = "2026-11-23T21:05:26.855Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/54/ebee5fafb3faa1343f7f0e8a6f999d25568c72a78909e99a4989a0f9b325/tox-4.67.17-py3-none-any.whl", hash = "sha256:0bdd50bf5ef104cbaeaafdaa134188b554d6e5a426dd5fc381cb1ca245e823e5", size = 381681, upload-time = "2026-11-28T02:01:37.03Z" },
 ]
 
 [[package]]
@@ -1837,8 +1837,8 @@ tox = [
 [package.metadata]
 requires-dist = [
     { name = "ansible", specifier = "==15.0.0" },
-    { name = "ansible-compat", specifier = "==26.11.0" },
-    { name = "ansible-dev-tools", specifier = "==26.11.0" },
+    { name = "ansible-compat", specifier = "==26.11.1" },
+    { name = "ansible-dev-tools", specifier = "==26.11.1" },
     { name = "black", marker = "extra == 'lint-template'", specifier = "==26.10.1" },
     { name = "build", extras = ["virtualenv"], marker = "extra == 'build-template'", specifier = "==1.6.1" },
     { name = "coverage", extras = ["toml"], marker = "extra == 'test-template'", specifier = "==7.17.5" },
@@ -1847,7 +1847,7 @@ requires-dist = [
     { name = "isort", marker = "extra == 'lint-template'", specifier = "==9.0.2" },
     { name = "jinja2", marker = "extra == 'doc-template'", specifier = "==3.1.6" },
     { name = "jinja2", marker = "extra == 'lint-template'", specifier = "==3.1.6" },
-    { name = "molecule", marker = "extra == 'test'", specifier = "==26.11.0" },
+    { name = "molecule", marker = "extra == 'test'", specifier = "==26.11.1" },
     { name = "molecule-plugins", extras = ["vagrant"], marker = "extra == 'test'", specifier = "==26.11.0" },
     { name = "mypy", marker = "extra == 'lint-template'", specifier = "==2.4.1" },
     { name = "myst-parser", marker = "extra == 'doc'", specifier = "==5.2.0" },
@@ -1867,7 +1867,7 @@ requires-dist = [
     { name = "sphinx-autodoc-typehints", marker = "extra == 'doc-template'", specifier = "==3.17.7" },
     { name = "sphinx-selective-exclude", marker = "extra == 'doc-template'", specifier = "==1.0.3" },
     { name = "sphinxawesome-theme", marker = "extra == 'doc-template'", specifier = "==6.0.6" },
-    { name = "tox", marker = "extra == 'tox'", specifier = "==4.67.16" },
+    { name = "tox", marker = "extra == 'tox'", specifier = "==4.67.17" },
     { name = "tox-uv", marker = "extra == 'tox'", specifier = "~=1.28" },
     { name = "types-docutils", marker = "extra == 'lint-template'" },
     { name = "types-pyyaml", marker = "extra == 'lint'" },
