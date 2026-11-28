@@ -31,8 +31,8 @@ dependencies = [
     # End template-managed dependencies
     # Add additional runtime dependencies below this line
     "ansible==15.0.0",
-    "ansible-compat==26.11.0",
-    "ansible-dev-tools==26.11.0",
+    "ansible-compat==26.11.1",
+    "ansible-dev-tools==26.11.1",
 ]
 
 [tool.setuptools.packages.find]
@@ -60,7 +60,7 @@ lint = [
 test = [
     "voraus-ipc-tools-ansible[test-template]",
     # Add additional testing dependencies here
-    "molecule==26.11.0",
+    "molecule==26.11.1",
     "molecule-plugins[vagrant]==26.11.0",
     "pytest-testinfra==10.2.2",
 ]
@@ -80,7 +80,7 @@ build = [
 # template updates.                                       #
 ###########################################################
 
-tox = ["tox==4.67.16", "tox-uv~=1.28"]
+tox = ["tox==4.67.17", "tox-uv~=1.28"]
 lint-template = [
     "isort==9.0.2",
     "black==26.10.1",
